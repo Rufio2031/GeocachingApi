@@ -29,7 +29,6 @@ namespace GeocachingApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Geocache>>> Get()
         {
-            //return await _context.Geocache2.Include(x => x.Id).ToListAsync();
             var geocaches = this.geocacheService.GetActiveGeocaches();
             if (!geocaches.Any())
             {

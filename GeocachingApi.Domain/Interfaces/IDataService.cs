@@ -4,7 +4,7 @@ using GeocachingApi.Domain.Models;
 
 namespace GeocachingApi.Domain.Interfaces
 {
-    public interface IGeocacheService
+    public interface IDataService
     {
         Task<IEnumerable<Geocache>> GetActiveGeocaches(int id);
     }

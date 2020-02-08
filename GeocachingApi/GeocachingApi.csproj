@@ -9,8 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GeocachingApi.DataAccess\GeocachingApi.DataAccess.csproj" />
-    <ProjectReference Include="..\GeocachingApi.Domain\GeocachingApi.Domain.csproj" />
+    <ProjectReference Include="..\GeocachingApi.DataAccess\GeocachingApi.Domain.csproj" />
   </ItemGroup>
 
 </Project>
