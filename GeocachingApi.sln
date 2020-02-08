@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29318.209
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeocachingApi", "GeocachingApi\GeocachingApi.csproj", "{88BFB1CF-543E-4315-9591-EB2B8B73284A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeocachingApi.Domain", "GeocachingApi.Domain\GeocachingApi.Domain.csproj", "{02E7D546-4E94-491E-98B2-7D35AF823B12}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeocachingApi.DataAccess", "GeocachingApi.DataAccess\GeocachingApi.DataAccess.csproj", "{70DBC23D-028C-41C6-91CD-881CD7048D34}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{88BFB1CF-543E-4315-9591-EB2B8B73284A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88BFB1CF-543E-4315-9591-EB2B8B73284A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88BFB1CF-543E-4315-9591-EB2B8B73284A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88BFB1CF-543E-4315-9591-EB2B8B73284A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02E7D546-4E94-491E-98B2-7D35AF823B12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02E7D546-4E94-491E-98B2-7D35AF823B12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02E7D546-4E94-491E-98B2-7D35AF823B12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02E7D546-4E94-491E-98B2-7D35AF823B12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70DBC23D-028C-41C6-91CD-881CD7048D34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70DBC23D-028C-41C6-91CD-881CD7048D34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70DBC23D-028C-41C6-91CD-881CD7048D34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70DBC23D-028C-41C6-91CD-881CD7048D34}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A1839DF8-54A4-4136-B9CE-EB2ED493EC3D}
+	EndGlobalSection
+EndGlobal
