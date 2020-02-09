@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using GeocachingApi.DataAccess;
-using GeocachingApi.Domain.Interfaces;
-using GeocachingApi.Domain.Models;
-using GeocachingApi.Domain.Services;
+using GeocachingApi.Infrastructure.Interfaces;
+using GeocachingApi.Infrastructure.Models;
 
 namespace GeocachingApi.Controllers
 {
@@ -15,47 +13,56 @@ namespace GeocachingApi.Controllers
     public class GeocacheController : ControllerBase
     {
         private readonly ILogger<GeocacheController> _logger;
-        private readonly ApplicationDbContext _context;
         private readonly IGeocacheService geocacheService;
 
-        public GeocacheController(ApplicationDbContext context, ILogger<GeocacheController> logger, IGeocacheService geocacheService)
+        public GeocacheController(ILogger<GeocacheController> logger, IGeocacheService geocacheService)
         {
             _logger = logger;
-            _context = context;
             this.geocacheService = geocacheService;
         }
 
-        // GET: api/Geocache
+        // GET: /Geocache
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Geocache>>> Get()
         {
-            var geocaches = this.geocacheService.GetActiveGeocaches();
-            if (!geocaches.Any())
+            try
             {
-                return this.NotFound(new List<Geocache>());
-            }
+                var geocaches = await this.geocacheService.GetActiveGeocaches();
 
-            return this.Ok(geocaches);
+                return this.Ok(geocaches);
+
+            } catch (Exception e)
+            {
+                _logger.LogError(e.InnerException.ToString());
+                return this.BadRequest(e.Message);
+            }
         }
 
-        // GET: api/Geocache/2
+        // GET: /Geocache/2
         [HttpGet("{id}"), Produces(typeof(Geocache))]
         public async Task<ActionResult<Geocache>> Get(int id)
         {
             if (id == 0)
             {
-                this.ModelState.AddModelError(nameof(id), "Invalid Id");
+                this.ModelState.AddModelError(nameof(id), "Invalid Id provided.");
                 return this.BadRequest(this.ModelState);
             }
 
-            //var user = await _context.Geocache2.FindAsync(id);
-            var geocache = this.geocacheService.GetGeocacheById(id);
-            if (geocache == null)
+            try
             {
-                return NotFound();
-            }
+                var geocache = await this.geocacheService.GetGeocacheById(id);
+                if (geocache?.Id == 0)
+                {
+                    return NotFound();
+                }
 
-            return this.Ok(geocache);
+                return this.Ok(geocache);
+
+            } catch (Exception e)
+            {
+                _logger.LogError(e.InnerException.ToString());
+                return this.BadRequest(e.Message);
+            }
         }
     }
 }

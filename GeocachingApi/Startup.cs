@@ -4,9 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using GeocachingApi.DataAccess;
-using GeocachingApi.Domain.Interfaces;
+using GeocachingApi.Domain.DataAccess;
 using GeocachingApi.Domain.Services;
+using GeocachingApi.Infrastructure.Interfaces;
+using GeocachingApi.Infrastructure.Models;
 
 namespace GeocachingApi
 {
