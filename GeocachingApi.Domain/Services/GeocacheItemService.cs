@@ -21,12 +21,5 @@ namespace GeocachingApi.Domain.Services
 
             return geocaches.ToSafeList();
         }
-
-        public async Task<Geocache> GetGeocacheById(int id)
-        {
-            var geocache = await this.dataService.GetGeocacheById(id);
-
-            return geocache ?? new Geocache();
-        }
     }
 }

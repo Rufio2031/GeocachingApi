@@ -22,10 +22,10 @@ namespace GeocachingApi.Controllers
             this.geocacheItemService = geocacheItemService;
         }
 
-        [HttpGet("GetActiveGeocacheItemsByGeocacheId/{id}"), Produces(typeof(Geocache))]
-        public async Task<ActionResult<Geocache>> GetActiveGeocacheItemsByGeocacheId(int id)
+        [HttpGet("GetActiveGeocacheItemsByGeocacheId/{id}"), Produces(typeof(List<GeocacheItem>))]
+        public async Task<ActionResult> GetActiveGeocacheItemsByGeocacheId(int id)
         {
-            if (id == 0)
+            if (id <= 0)
             {
                 this.ModelState.AddModelError(nameof(id), "Invalid Id provided.");
                 return this.BadRequest(this.ModelState);
@@ -36,14 +36,15 @@ namespace GeocachingApi.Controllers
                 var geocache = await this.geocacheItemService.GetActiveGeocacheItemsByGeocacheId(id);
                 if (!geocache.Any())
                 {
-                    return NotFound();
+                    var noResultsFoundMessage = $"No Results found for GeocacheId {id}";
+                    return NotFound(noResultsFoundMessage);
                 }
 
                 return this.Ok(geocache);
 
             } catch (Exception e)
             {
-                _logger.LogError(e.InnerException.ToString());
+                _logger.LogError(e.InnerException?.ToString());
                 return this.BadRequest(e.Message);
             }
         }

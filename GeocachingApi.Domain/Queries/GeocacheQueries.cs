@@ -48,7 +48,9 @@ namespace GeocachingApi.Domain.Queries
                         {
                             Id = ci.Id,
                             Name = ci.Name,
-                            GeocacheId = ci.GeocacheId
+                            GeocacheId = ci.GeocacheId,
+                            ActiveStartDate = ci.ActiveStartDate,
+                            ActiveEndDate = ci.ActiveEndDate
                         }).ToListAsync();
             });
         }

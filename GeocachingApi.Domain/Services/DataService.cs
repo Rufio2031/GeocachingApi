@@ -36,7 +36,7 @@ namespace GeocachingApi.Domain.Services
         {
             var geocache = await GeocacheQueries.GetActiveGeocacheItemsByGeocacheId(dbContext, id);
 
-            return geocache ?? new List<GeocacheItem>();
+            return geocache.ToSafeList();
         }
     }
 }
