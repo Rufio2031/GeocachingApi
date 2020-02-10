@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using GeocachingApi.Controllers;
 using GeocachingApi.Infrastructure.Models;
 using GeocachingApi.Infrastructure.Interfaces;
-using Microsoft.Extensions.Logging;
 
 namespace GeocachingApi.Tests.GeocachingApi.Controllers
 {
@@ -26,11 +25,11 @@ namespace GeocachingApi.Tests.GeocachingApi.Controllers
         }
 
         [TestMethod]
-        public async void GetActiveGeocacheItemsByGeocacheId_Should_Call_GeocacheItemService_GetActiveGeocacheItemsByGeocacheId()
+        public async Task GetActiveGeocacheItemsByGeocacheId_Should_Call_GeocacheItemService_GetActiveGeocacheItemsByGeocacheId()
         {
-            this.geocacheItemService.Setup(x => x.GetActiveGeocacheItemsByGeocacheId(1));
+            this.geocacheItemService.Setup(x => x.GetActiveGeocacheItemsByGeocacheId(1)).ReturnsAsync(new List<GeocacheItem>()).Verifiable();
             await this.geocacheItemController.GetActiveGeocacheItemsByGeocacheId(1);
-            this.geocacheItemService.Verify(x => x.GetActiveGeocacheItemsByGeocacheId(1));
+            this.geocacheItemService.Verify();
         }
     }
 }

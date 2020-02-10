@@ -36,7 +36,7 @@ namespace GeocachingApi.Domain.Queries
             });
         }
 
-        public static async Task<IList<GeocacheItem>> GetActiveGeocacheItemsByGeocacheId(ApplicationDbContext db, int id)
+        public static async Task<IEnumerable<GeocacheItem>> GetActiveGeocacheItemsByGeocacheId(ApplicationDbContext db, int id)
         {
             return await Task.Run(() => {
                 return (from c in db.Geocache

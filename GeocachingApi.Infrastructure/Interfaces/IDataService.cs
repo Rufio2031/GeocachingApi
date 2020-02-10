@@ -8,5 +8,6 @@ namespace GeocachingApi.Infrastructure.Interfaces
     {
         Task<IEnumerable<Geocache>> GetActiveGeocaches();
         Task<Geocache> GetGeocacheById(int id);
+        Task<IEnumerable<GeocacheItem>> GetActiveGeocacheItemsByGeocacheId(int id);
     }
 }
