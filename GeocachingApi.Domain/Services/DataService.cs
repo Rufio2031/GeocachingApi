@@ -5,6 +5,7 @@ using GeocachingApi.Infrastructure.Interfaces;
 using GeocachingApi.Infrastructure.Models;
 using GeocachingApi.Domain.DataAccess;
 using GeocachingApi.Domain.Queries;
+using GeocachingApi.Infrastructure.Extensions;
 
 namespace GeocachingApi.Domain.Services
 {

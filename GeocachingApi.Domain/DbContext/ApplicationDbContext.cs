@@ -10,5 +10,6 @@ namespace GeocachingApi.Domain.DataAccess
 
         public virtual DbSet<Geocache> Geocache { get; set; }
         public virtual DbSet<GeocacheItem> GeocacheItem { get; set; }
+        public virtual DbSet<GeocacheLocation> GeocacheLocation { get; set; }
     }
 }

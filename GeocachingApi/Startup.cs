@@ -25,6 +25,7 @@ namespace GeocachingApi
         {
             services.AddScoped<IDataService, DataService>();
             services.AddScoped<IGeocacheService, GeocacheService>();
+            services.AddScoped<IGeocacheItemService, GeocacheItemService>();
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection")));
             services.AddControllers();

@@ -7,10 +7,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
+    <PackageReference Include="Microsoft.VisualStudio.TestPlatform" Version="14.0.0" />
+    <PackageReference Include="Moq" Version="4.13.1" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.0.0" />
     <PackageReference Include="MSTest.TestFramework" Version="2.0.0" />
     <PackageReference Include="coverlet.collector" Version="1.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="GeocachingApi.Infrastructure\" />
+    <Folder Include="GeocachingApi.Domain\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GeocachingApi.Domain\GeocachingApi.Domain.csproj" />
+    <ProjectReference Include="..\GeocachingApi.Infrastructure\GeocachingApi.Infrastructure.csproj" />
+    <ProjectReference Include="..\GeocachingApi\GeocachingApi.csproj" />
   </ItemGroup>
 
 </Project>

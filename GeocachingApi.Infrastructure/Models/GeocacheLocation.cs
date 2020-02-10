@@ -2,10 +2,10 @@
 
 namespace GeocachingApi.Infrastructure.Models
 {
-    public class Geocache : IGeocache
+    public class GeocacheLocation : IGeocacheLocation
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public int LocationId { get; set; }
+        public decimal Longitude { get; set; }
+        public decimal Latitude { get; set; }
     }
 }
