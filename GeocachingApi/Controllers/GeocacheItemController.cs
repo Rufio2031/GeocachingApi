@@ -11,21 +11,21 @@ namespace GeocachingApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class GeocacheItemController : ControllerBase
+    public class GeocacheItemsController : ControllerBase
     {
-        private readonly ILogger<GeocacheItemController> _logger;
+        private readonly ILogger<GeocacheItemsController> _logger;
         private readonly IGeocacheItemService geocacheItemService;
 
-        public GeocacheItemController(ILogger<GeocacheItemController> logger, IGeocacheItemService geocacheItemService)
+        public GeocacheItemsController(ILogger<GeocacheItemsController> logger, IGeocacheItemService geocacheItemService)
         {
             _logger = logger;
             this.geocacheItemService = geocacheItemService;
         }
 
-        [HttpGet("GetActiveGeocacheItemsByGeocacheId/{id}"), Produces(typeof(List<GeocacheItem>))]
-        public async Task<ActionResult> GetActiveGeocacheItemsByGeocacheId(int id)
+        [HttpGet("~/geocaches/{id}/geocache-items"), Produces(typeof(Geocache))]
+        public async Task<ActionResult<Geocache>> GetActiveGeocacheItemsByGeocacheId(int id)
         {
-            if (id <= 0)
+            if (id == 0)
             {
                 this.ModelState.AddModelError(nameof(id), "Invalid Id provided.");
                 return this.BadRequest(this.ModelState);
@@ -42,9 +42,32 @@ namespace GeocachingApi.Controllers
 
                 return this.Ok(geocache);
 
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 _logger.LogError(e.InnerException?.ToString());
+                return this.BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost, Produces(typeof(GeocacheItem))]
+        public async Task<ActionResult<GeocacheItem>> AddGeocacheItem([FromBody]GeocacheItem geocacheItem)
+        {
+            try
+            {
+                var geocache = await this.geocacheItemService.GetActiveGeocacheItemsByGeocacheId(geocacheItem.Id);
+                return this.Ok();
+                if (!geocache.Any())
+                {
+                    return NotFound();
+                }
+
+                return this.Ok(geocache);
+
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.InnerException.ToString());
                 return this.BadRequest(e.Message);
             }
         }
