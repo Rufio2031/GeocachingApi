@@ -34,9 +34,10 @@ namespace GeocachingApi.Domain.Services
 
         public async Task<IEnumerable<GeocacheItem>> GetActiveGeocacheItemsByGeocacheId(int id)
         {
-            var geocache = await GeocacheQueries.GetActiveGeocacheItemsByGeocacheId(dbContext, id);
+            var geocacheItems = await GeocacheQueries.GetActiveGeocacheItemsByGeocacheId(dbContext, id);
 
-            return geocache.ToSafeList();
+            return geocacheItems.ToSafeList();
+            ;
         }
     }
 }
