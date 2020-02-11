@@ -14,9 +14,9 @@ namespace GeocachingApi.Tests.GeocachingApi.Controllers
     [TestClass]
     public class GeocacheItemsControllerTests
     {
-        private GeocacheItemController geocacheItemController;
-        private Mock<IGeocacheItemsService> geocacheItemService;
-        private Mock<ILogger<GeocacheItemController>> logger;
+        private GeocacheItemsController geocacheItemsController;
+        private Mock<IGeocacheItemsService> geocacheItemsService;
+        private Mock<ILogger<GeocacheItemsController>> logger;
 
         private IList<GeocacheItem> geocacheItemList;
         private GeocacheItem geocacheItem;
@@ -24,9 +24,9 @@ namespace GeocachingApi.Tests.GeocachingApi.Controllers
         [TestInitialize]
         public void TestInitialize()
         {
-            this.geocacheItemService = new Mock<IGeocacheItemsService>();
-            this.logger = new Mock<ILogger<GeocacheItemController>>();
-            this.geocacheItemController = new GeocacheItemController(this.logger.Object, this.geocacheItemService.Object);
+            this.geocacheItemsService = new Mock<IGeocacheItemsService>();
+            this.logger = new Mock<ILogger<GeocacheItemsController>>();
+            this.geocacheItemsController = new GeocacheItemsController(this.logger.Object, this.geocacheItemsService.Object);
 
             this.SetupGeocacheItemList();
         }
@@ -34,46 +34,46 @@ namespace GeocachingApi.Tests.GeocachingApi.Controllers
         [TestMethod]
         public async Task GetActiveGeocacheItemsByGeocacheId_Should_Return_BadRequest_If_GeocacheId_Is_Zero()
         {
-            var result = await this.geocacheItemController.GetActiveGeocacheItemsByGeocacheId(0);
+            var result = await this.geocacheItemsController.GetGeocacheItemsByGeocacheId(0);
             Assert.AreEqual(typeof(BadRequestObjectResult), result.GetType());
         }
 
         [TestMethod]
         public async Task GetActiveGeocacheItemsByGeocacheId_Should_Return_BadRequest_If_GeocacheId_Is_Less_Than_Zero()
         {
-            var result = await this.geocacheItemController.GetActiveGeocacheItemsByGeocacheId(-1);
+            var result = await this.geocacheItemsController.GetGeocacheItemsByGeocacheId(-1);
             Assert.AreEqual(typeof(BadRequestObjectResult), result.GetType());
         }
 
         [TestMethod]
         public async Task GetActiveGeocacheItemsByGeocacheId_Should_Call_GeocacheItemService_GetActiveGeocacheItemsByGeocacheId()
         {
-            this.geocacheItemService.Setup(x => x.GetActiveGeocacheItemsByGeocacheId(1)).ReturnsAsync(new List<GeocacheItem>()).Verifiable();
-            await this.geocacheItemController.GetActiveGeocacheItemsByGeocacheId(1);
-            this.geocacheItemService.Verify();
+            this.geocacheItemsService.Setup(x => x.GetGeocacheItemsByGeocacheId(1, false)).ReturnsAsync(new List<GeocacheItem>()).Verifiable();
+            await this.geocacheItemsController.GetGeocacheItemsByGeocacheId(1);
+            this.geocacheItemsService.Verify();
         }
 
         [TestMethod]
         public async Task GetActiveGeocacheItemsByGeocacheId_Should_Return_NotFound_When_No_Results_Found()
         {
-            this.geocacheItemService.Setup(x => x.GetActiveGeocacheItemsByGeocacheId(1)).ReturnsAsync(new List<GeocacheItem>());
-            var result = await this.geocacheItemController.GetActiveGeocacheItemsByGeocacheId(1);
+            this.geocacheItemsService.Setup(x => x.GetGeocacheItemsByGeocacheId(1, false)).ReturnsAsync(new List<GeocacheItem>());
+            var result = await this.geocacheItemsController.GetGeocacheItemsByGeocacheId(1);
             Assert.AreEqual(typeof(NotFoundObjectResult), result.GetType());
         }
 
         [TestMethod]
         public async Task GetActiveGeocacheItemsByGeocacheId_Should_Return_OkResult_When_Items_Are_Found()
         {
-            this.geocacheItemService.Setup(x => x.GetActiveGeocacheItemsByGeocacheId(1)).ReturnsAsync(this.geocacheItemList);
-            var result = await this.geocacheItemController.GetActiveGeocacheItemsByGeocacheId(1);
+            this.geocacheItemsService.Setup(x => x.GetGeocacheItemsByGeocacheId(1, false)).ReturnsAsync(this.geocacheItemList);
+            var result = await this.geocacheItemsController.GetGeocacheItemsByGeocacheId(1);
             Assert.AreEqual(typeof(OkObjectResult), result.GetType());
         }
 
         [TestMethod]
         public async Task GetActiveGeocacheItemsByGeocacheId_Should_Return_BadRequest_When_GeocacheItemService_Throws_An_Exception()
         {
-            this.geocacheItemService.Setup(x => x.GetActiveGeocacheItemsByGeocacheId(1)).Throws(new Exception());
-            var result = await this.geocacheItemController.GetActiveGeocacheItemsByGeocacheId(1);
+            this.geocacheItemsService.Setup(x => x.GetGeocacheItemsByGeocacheId(1, false)).Throws(new Exception());
+            var result = await this.geocacheItemsController.GetGeocacheItemsByGeocacheId(1);
             Assert.AreEqual(typeof(BadRequestObjectResult), result.GetType());
         }
 

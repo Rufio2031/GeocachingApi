@@ -15,11 +15,11 @@ namespace GeocachingApi.Domain.Services
             this.dataService = dataService;
         }
 
-        public async Task<IList<GeocacheItem>> GetActiveGeocacheItemsByGeocacheId(int id)
+        public async Task<IList<GeocacheItem>> GetGeocacheItemsByGeocacheId(int id, bool activeOnly)
         {
-            var geocaches = await this.dataService.GetActiveGeocacheItemsByGeocacheId(id);
+            var geocacheItems = await this.dataService.GetGeocacheItemsByGeocacheId(id, activeOnly);
 
-            return geocaches.ToSafeList();
+            return geocacheItems.ToSafeList();
         }
     }
 }

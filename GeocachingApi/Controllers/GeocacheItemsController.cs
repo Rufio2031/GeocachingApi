@@ -14,16 +14,16 @@ namespace GeocachingApi.Controllers
     public class GeocacheItemsController : ControllerBase
     {
         private readonly ILogger<GeocacheItemsController> _logger;
-        private readonly IGeocacheItemsService geocacheItemService;
+        private readonly IGeocacheItemsService geocacheItemsService;
 
-        public GeocacheItemsController(ILogger<GeocacheItemsController> logger, IGeocacheItemsService geocacheItemService)
+        public GeocacheItemsController(ILogger<GeocacheItemsController> logger, IGeocacheItemsService geocacheItemsService)
         {
             _logger = logger;
-            this.geocacheItemService = geocacheItemService;
+            this.geocacheItemsService = geocacheItemsService;
         }
 
-        [HttpGet("~/geocaches/{id}/geocache-items"), Produces(typeof(Geocache))]
-        public async Task<ActionResult<Geocache>> GetGeocacheItemsByGeocacheId(int id, bool activeOnly = true)
+        [HttpGet("~/geocaches/{id}/geocache-items"), Produces(typeof(GeocacheItem))]
+        public async Task<ActionResult<GeocacheItem>> GetGeocacheItemsByGeocacheId(int id, bool activeOnly = true)
         {
             if (id == 0)
             {
@@ -33,14 +33,14 @@ namespace GeocachingApi.Controllers
 
             try
             {
-                var geocache = await this.geocacheItemService.GetGeocacheItemsByGeocacheId(id, activeOnly);
-                if (!geocache.Any())
+                var geocacheItems = await this.geocacheItemsService.GetGeocacheItemsByGeocacheId(id, activeOnly);
+                if (!geocacheItems.Any())
                 {
-                    var noResultsFoundMessage = $"No Results found for GeocacheId {id}";
+                    var noResultsFoundMessage = $"No GeocacheItems found for GeocacheId {id}";
                     return NotFound(noResultsFoundMessage);
                 }
 
-                return this.Ok(geocache);
+                return this.Ok(geocacheItems);
 
             }
             catch (Exception e)
@@ -55,7 +55,7 @@ namespace GeocachingApi.Controllers
         {
             try
             {
-                var geocache = await this.geocacheItemService.GetActiveGeocacheItemsByGeocacheId(geocacheItem.Id);
+                var geocache = await this.geocacheItemsService.GetGeocacheItemsByGeocacheId(geocacheItem.Id, false);
                 return this.Ok();
                 if (!geocache.Any())
                 {

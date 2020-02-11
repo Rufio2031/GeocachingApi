@@ -36,14 +36,12 @@ namespace GeocachingApi.Domain.Queries
             });
         }
 
-        public static async Task<IEnumerable<GeocacheItem>> GetActiveGeocacheItemsByGeocacheId(ApplicationDbContext db, int id)
+        public static async Task<IEnumerable<GeocacheItem>> GetGeocacheItemsByGeocacheId(ApplicationDbContext db, int id)
         {
             return await Task.Run(() => {
                 return (from c in db.Geocache
                         join ci in db.GeocacheItem on c.Id equals ci.GeocacheId
-                        where c.Id == id
-                        && DateTime.Now > ci.ActiveStartDate
-                        && DateTime.Now < ci.ActiveEndDate
+                        where (c.Id == id)
                         select new GeocacheItem
                         {
                             Id = ci.Id,

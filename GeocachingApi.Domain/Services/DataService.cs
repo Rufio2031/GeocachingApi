@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using GeocachingApi.Infrastructure.Interfaces;
 using GeocachingApi.Infrastructure.Models;
@@ -32,12 +33,16 @@ namespace GeocachingApi.Domain.Services
             return geocache ?? new Geocache();
         }
 
-        public async Task<IEnumerable<GeocacheItem>> GetActiveGeocacheItemsByGeocacheId(int id)
+        public async Task<IEnumerable<GeocacheItem>> GetGeocacheItemsByGeocacheId(int id, bool activeOnly)
         {
-            var geocacheItems = await GeocachesQueries.GetActiveGeocacheItemsByGeocacheId(dbContext, id);
+            var geocacheItems = await GeocachesQueries.GetGeocacheItemsByGeocacheId(dbContext, id);
+
+            if (activeOnly)
+            {
+                geocacheItems = geocacheItems.Where(x => x.IsActive);
+            }
 
             return geocacheItems.ToSafeList();
-            ;
         }
     }
 }
