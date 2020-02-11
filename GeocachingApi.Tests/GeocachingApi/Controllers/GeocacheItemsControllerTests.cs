@@ -12,7 +12,7 @@ using GeocachingApi.Infrastructure.Interfaces;
 namespace GeocachingApi.Tests.GeocachingApi.Controllers
 {
     [TestClass]
-    public class GeocacheItemControllerTests
+    public class GeocacheItemsControllerTests
     {
         private GeocacheItemController geocacheItemController;
         private Mock<IGeocacheItemService> geocacheItemService;

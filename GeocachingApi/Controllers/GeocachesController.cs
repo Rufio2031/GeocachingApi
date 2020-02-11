@@ -10,12 +10,12 @@ namespace GeocachingApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class GeocacheController : ControllerBase
+    public class GeocachesController : ControllerBase
     {
-        private readonly ILogger<GeocacheController> _logger;
+        private readonly ILogger<GeocachesController> _logger;
         private readonly IGeocacheService geocacheService;
 
-        public GeocacheController(ILogger<GeocacheController> logger, IGeocacheService geocacheService)
+        public GeocachesController(ILogger<GeocachesController> logger, IGeocacheService geocacheService)
         {
             _logger = logger;
             this.geocacheService = geocacheService;

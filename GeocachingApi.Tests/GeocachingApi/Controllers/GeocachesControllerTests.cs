@@ -10,18 +10,18 @@ using GeocachingApi.Infrastructure.Interfaces;
 namespace GeocachingApi.Tests.GeocachingApi.Controllers
 {
     [TestClass]
-    public class GeocacheControllerTests
+    public class GeocachesControllerTests
     {
-        private GeocacheController geocacheController;
+        private GeocachesController geocacheController;
         private Mock<IGeocacheService> geocacheService;
-        private Mock<ILogger<GeocacheController>> logger;
+        private Mock<ILogger<GeocachesController>> logger;
 
         [TestInitialize]
         public void TestInitialize()
         {
             this.geocacheService = new Mock<IGeocacheService>();
-            this.logger = new Mock<ILogger<GeocacheController>>();
-            this.geocacheController = new GeocacheController(this.logger.Object, this.geocacheService.Object);
+            this.logger = new Mock<ILogger<GeocachesController>>();
+            this.geocacheController = new GeocachesController(this.logger.Object, this.geocacheService.Object);
         }
 
         [TestMethod]
