@@ -15,7 +15,7 @@ namespace GeocachingApi.Tests.GeocachingApi.Controllers
     public class GeocacheItemsControllerTests
     {
         private GeocacheItemController geocacheItemController;
-        private Mock<IGeocacheItemService> geocacheItemService;
+        private Mock<IGeocacheItemsService> geocacheItemService;
         private Mock<ILogger<GeocacheItemController>> logger;
 
         private IList<GeocacheItem> geocacheItemList;
@@ -24,7 +24,7 @@ namespace GeocachingApi.Tests.GeocachingApi.Controllers
         [TestInitialize]
         public void TestInitialize()
         {
-            this.geocacheItemService = new Mock<IGeocacheItemService>();
+            this.geocacheItemService = new Mock<IGeocacheItemsService>();
             this.logger = new Mock<ILogger<GeocacheItemController>>();
             this.geocacheItemController = new GeocacheItemController(this.logger.Object, this.geocacheItemService.Object);
 

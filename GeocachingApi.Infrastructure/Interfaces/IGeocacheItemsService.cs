@@ -4,8 +4,8 @@ using GeocachingApi.Infrastructure.Models;
 
 namespace GeocachingApi.Infrastructure.Interfaces
 {
-    public interface IGeocacheItemService
+    public interface IGeocacheItemsService
     {
-        Task<IList<GeocacheItem>> GetActiveGeocacheItemsByGeocacheId(int id);
+        Task<IList<GeocacheItem>> GetGeocacheItemsByGeocacheId(int id, bool activeOnly);
     }
 }

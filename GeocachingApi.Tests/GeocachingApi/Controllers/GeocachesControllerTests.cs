@@ -13,13 +13,13 @@ namespace GeocachingApi.Tests.GeocachingApi.Controllers
     public class GeocachesControllerTests
     {
         private GeocachesController geocacheController;
-        private Mock<IGeocacheService> geocacheService;
+        private Mock<IGeocachesService> geocacheService;
         private Mock<ILogger<GeocachesController>> logger;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            this.geocacheService = new Mock<IGeocacheService>();
+            this.geocacheService = new Mock<IGeocachesService>();
             this.logger = new Mock<ILogger<GeocachesController>>();
             this.geocacheController = new GeocachesController(this.logger.Object, this.geocacheService.Object);
         }

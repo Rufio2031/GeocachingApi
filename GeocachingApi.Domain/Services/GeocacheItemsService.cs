@@ -6,11 +6,11 @@ using GeocachingApi.Infrastructure.Extensions;
 
 namespace GeocachingApi.Domain.Services
 {
-    public class GeocacheItemService : IGeocacheItemService
+    public class GeocacheItemsService : IGeocacheItemsService
     {
         private readonly IDataService dataService;
 
-        public GeocacheItemService(IDataService dataService)
+        public GeocacheItemsService(IDataService dataService)
         {
             this.dataService = dataService;
         }

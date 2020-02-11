@@ -9,7 +9,7 @@ using GeocachingApi.Infrastructure.Extensions;
 
 namespace GeocachingApi.Domain.Queries
 {
-    class GeocacheQueries
+    class GeocachesQueries
     {
         public static async Task<IEnumerable<Geocache>> GetActiveGeocaches(ApplicationDbContext db)
         {

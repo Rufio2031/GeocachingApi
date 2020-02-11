@@ -13,9 +13,9 @@ namespace GeocachingApi.Controllers
     public class GeocachesController : ControllerBase
     {
         private readonly ILogger<GeocachesController> _logger;
-        private readonly IGeocacheService geocacheService;
+        private readonly IGeocachesService geocacheService;
 
-        public GeocachesController(ILogger<GeocachesController> logger, IGeocacheService geocacheService)
+        public GeocachesController(ILogger<GeocachesController> logger, IGeocachesService geocacheService)
         {
             _logger = logger;
             this.geocacheService = geocacheService;

@@ -20,21 +20,21 @@ namespace GeocachingApi.Domain.Services
 
         public async Task<IEnumerable<Geocache>> GetActiveGeocaches()
         {
-            var geocaches = await GeocacheQueries.GetActiveGeocaches(dbContext);
+            var geocaches = await GeocachesQueries.GetActiveGeocaches(dbContext);
 
             return geocaches ?? new List<Geocache>();
         }
 
         public async Task<Geocache> GetGeocacheById(int id)
         {
-            var geocache = await GeocacheQueries.GetGeocacheById(dbContext, id);
+            var geocache = await GeocachesQueries.GetGeocacheById(dbContext, id);
 
             return geocache ?? new Geocache();
         }
 
         public async Task<IEnumerable<GeocacheItem>> GetActiveGeocacheItemsByGeocacheId(int id)
         {
-            var geocacheItems = await GeocacheQueries.GetActiveGeocacheItemsByGeocacheId(dbContext, id);
+            var geocacheItems = await GeocachesQueries.GetActiveGeocacheItemsByGeocacheId(dbContext, id);
 
             return geocacheItems.ToSafeList();
             ;

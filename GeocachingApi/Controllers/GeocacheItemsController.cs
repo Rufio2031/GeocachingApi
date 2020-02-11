@@ -14,16 +14,16 @@ namespace GeocachingApi.Controllers
     public class GeocacheItemsController : ControllerBase
     {
         private readonly ILogger<GeocacheItemsController> _logger;
-        private readonly IGeocacheItemService geocacheItemService;
+        private readonly IGeocacheItemsService geocacheItemService;
 
-        public GeocacheItemsController(ILogger<GeocacheItemsController> logger, IGeocacheItemService geocacheItemService)
+        public GeocacheItemsController(ILogger<GeocacheItemsController> logger, IGeocacheItemsService geocacheItemService)
         {
             _logger = logger;
             this.geocacheItemService = geocacheItemService;
         }
 
         [HttpGet("~/geocaches/{id}/geocache-items"), Produces(typeof(Geocache))]
-        public async Task<ActionResult<Geocache>> GetActiveGeocacheItemsByGeocacheId(int id)
+        public async Task<ActionResult<Geocache>> GetGeocacheItemsByGeocacheId(int id, bool activeOnly = true)
         {
             if (id == 0)
             {
@@ -33,7 +33,7 @@ namespace GeocachingApi.Controllers
 
             try
             {
-                var geocache = await this.geocacheItemService.GetActiveGeocacheItemsByGeocacheId(id);
+                var geocache = await this.geocacheItemService.GetGeocacheItemsByGeocacheId(id, activeOnly);
                 if (!geocache.Any())
                 {
                     var noResultsFoundMessage = $"No Results found for GeocacheId {id}";
