@@ -12,12 +12,12 @@ namespace GeocachingApi.Controllers
     [Route("[controller]")]
     public class GeocachesController : ControllerBase
     {
-        private readonly ILogger<GeocachesController> _logger;
+        private readonly ILogger<GeocachesController> logger;
         private readonly IGeocachesService geocacheService;
 
         public GeocachesController(ILogger<GeocachesController> logger, IGeocachesService geocacheService)
         {
-            _logger = logger;
+            this.logger = logger;
             this.geocacheService = geocacheService;
         }
 
@@ -33,7 +33,7 @@ namespace GeocachingApi.Controllers
 
             } catch (Exception e)
             {
-                _logger.LogError(e.InnerException.ToString());
+                this.logger.LogError(e.InnerException.ToString());
                 return this.BadRequest(e.Message);
             }
         }
@@ -60,7 +60,7 @@ namespace GeocachingApi.Controllers
 
             } catch (Exception e)
             {
-                _logger.LogError(e.InnerException.ToString());
+                this.logger.LogError(e.InnerException.ToString());
                 return this.BadRequest(e.Message);
             }
         }
