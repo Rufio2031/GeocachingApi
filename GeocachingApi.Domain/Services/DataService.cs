@@ -56,9 +56,15 @@ namespace GeocachingApi.Domain.Services
             return (GeocacheItemModel)geocacheItem;
         }
 
-        public bool HasUniqueName(string name)
+        public async Task<bool> HasUniqueName(string name)
         {
-            return GeocacheItemsQueries.HasUniqueName(this.dbContext, name);
+            return await GeocacheItemsQueries.HasUniqueName(this.dbContext, name);
+        }
+
+        public async Task<bool> GeocacheIdExists(int geocacheId)
+        {
+            var geocache = await this.GetGeocacheById(geocacheId);
+            return geocache.Id > 0;
         }
     }
 }

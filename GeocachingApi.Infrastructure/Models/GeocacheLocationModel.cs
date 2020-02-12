@@ -2,7 +2,7 @@
 
 namespace GeocachingApi.Infrastructure.Models
 {
-    public class GeocacheLocation : IGeocacheLocation
+    public class GeocacheLocationModel : IGeocacheLocationModel
     {
         public int Id { get; set; }
         public decimal Longitude { get; set; }

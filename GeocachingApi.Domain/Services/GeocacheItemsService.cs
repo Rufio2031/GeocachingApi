@@ -41,7 +41,7 @@ namespace GeocachingApi.Domain.Services
             return geocacheItem;
         }
 
-        public IList<string> ValidateGeocacheItem(IGeocacheItemModel geocacheItem)
+        public async Task<IList<string>> ValidateGeocacheItem(IGeocacheItemModel geocacheItem)
         {
             var validationMessages = new List<string>();
 
@@ -55,9 +55,17 @@ namespace GeocachingApi.Domain.Services
                 validationMessages.Add("Invalid GeocacheId.");
             }
 
-            if (!this.dataService.HasUniqueName(geocacheItem.Name))
+            if (!await this.dataService.HasUniqueName(geocacheItem.Name))
             {
                 validationMessages.Add("Geocache item name is already in use.");
+            }
+
+            if (geocacheItem.GeocacheId > 0)
+            {
+                if (!await this.dataService.GeocacheIdExists(geocacheItem.GeocacheId ?? 0))
+                {
+                    validationMessages.Add("Geocache does not exist.");
+                }
             }
 
             return validationMessages;

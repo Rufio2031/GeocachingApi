@@ -35,7 +35,8 @@ namespace GeocachingApi.Domain.Queries
             var createdItem = await Task.Run(() =>
                                              {
                                                  var newGeocacheItem = new GeocacheItem
-                                                                       {
+                                                 {
+                                                     Id = geocacheItem.Id,
                                                                            Name = geocacheItem.Name,
                                                                            GeocacheId = geocacheItem.GeocacheId,
                                                                            ActiveStartDate = geocacheItem.ActiveStartDate,
@@ -49,11 +50,14 @@ namespace GeocachingApi.Domain.Queries
             return createdItem;
         }
 
-        public static bool HasUniqueName(geocachingContext db, string name)
+        public static async Task<bool> HasUniqueName(geocachingContext db, string name)
         {
-            var result = (from ci in db.GeocacheItem
-                         where ci.Name == name
-                         select ci).FirstOrDefault();
+            var result = await Task.Run(() =>
+            {
+                return (from ci in db.GeocacheItem
+                        where ci.Name == name
+                        select ci).FirstOrDefault();
+            });
 
             return result == null;
         }

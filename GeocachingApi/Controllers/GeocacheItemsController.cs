@@ -60,7 +60,7 @@ namespace GeocachingApi.Controllers
                 return this.BadRequest(this.ModelState);
             }
 
-            var validationMessage = this.geocacheItemsService.ValidateGeocacheItem(geocacheItem);
+            var validationMessage = await this.geocacheItemsService.ValidateGeocacheItem(geocacheItem);
 
             if (validationMessage.Any())
             {

@@ -2,7 +2,7 @@
 
 namespace GeocachingApi.Infrastructure.Interfaces
 {
-    public interface IGeocacheLocation
+    public interface IGeocacheLocationModel
     {
         int Id { get; set; }
         decimal Longitude { get; set; }

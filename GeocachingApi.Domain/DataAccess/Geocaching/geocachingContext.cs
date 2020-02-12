@@ -32,8 +32,6 @@ namespace GeocachingApi.Domain.DataAccess.Geocaching
         {
             modelBuilder.Entity<Geocache>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.DateCreated)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
@@ -54,10 +52,8 @@ namespace GeocachingApi.Domain.DataAccess.Geocaching
             modelBuilder.Entity<GeocacheItem>(entity =>
             {
                 entity.HasIndex(e => e.Name)
-                    .HasName("UQ__Geocache__737584F60A454FCD")
+                    .HasName("UQ__Geocache__737584F63FA7F711")
                     .IsUnique();
-
-                entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.ActiveEndDate).HasColumnType("datetime");
 
@@ -83,8 +79,6 @@ namespace GeocachingApi.Domain.DataAccess.Geocaching
 
             modelBuilder.Entity<GeocacheLocation>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.DateCreated)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");

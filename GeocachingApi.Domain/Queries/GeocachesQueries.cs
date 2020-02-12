@@ -29,11 +29,18 @@ namespace GeocachingApi.Domain.Queries
         {
             return await Task.Run(() => {
                 return (from c in db.Geocache
+                        join l in db.GeocacheLocation on c.LocationId equals l.Id
                         where c.Id == id
                         select new GeocacheModel
                         {
                             Id = c.Id,
-                            Name = c.Name
+                            Name = c.Name,
+                            Location = new GeocacheLocationModel
+                            {
+                                Id = l.Id,
+                                Latitude = l.Latitude,
+                                Longitude = l.Longitude
+                            }
                         }).FirstOrDefault();
             });
         }

@@ -10,6 +10,7 @@ namespace GeocachingApi.Infrastructure.Interfaces
         Task<GeocacheModel> GetGeocacheById(int id);
         Task<IEnumerable<GeocacheItemModel>> GetGeocacheItemsByGeocacheId(int id, bool activeOnly);
         Task<GeocacheItemModel> CreateGeocacheItem(IGeocacheItemModel geocacheItem);
-        bool HasUniqueName(string name);
+        Task<bool> HasUniqueName(string name);
+        Task<bool> GeocacheIdExists(int geocacheId);
     }
 }
