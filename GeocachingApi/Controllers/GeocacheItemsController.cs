@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -53,21 +54,29 @@ namespace GeocachingApi.Controllers
         [HttpPost, Produces(typeof(GeocacheItem))]
         public async Task<ActionResult<GeocacheItem>> AddGeocacheItem([FromBody]GeocacheItem geocacheItem)
         {
+            if (geocacheItem == null)
+            {
+                this.ModelState.AddModelError(nameof(geocacheItem), "Invalid Geocache Item.");
+                return this.BadRequest(this.ModelState);
+            }
+
+            var validationMessage = this.geocacheItemsService.ValidateGeocacheItem(geocacheItem);
+
+            if (validationMessage.Any())
+            {
+                this.ModelState.AddModelError(nameof(geocacheItem), JsonSerializer.Serialize(validationMessage));
+                return this.BadRequest(this.ModelState);
+            }
+
             try
             {
-                var geocache = await this.geocacheItemsService.GetGeocacheItemsByGeocacheId(geocacheItem.Id, false);
-                return this.Ok();
-                if (!geocache.Any())
-                {
-                    return NotFound();
-                }
+                geocacheItem = (GeocacheItem)await this.geocacheItemsService.CreateGeocacheItem(geocacheItem);
 
-                return this.Ok(geocache);
-
+                return this.Ok(geocacheItem);
             }
             catch (Exception e)
             {
-                this.logger.LogError(e.InnerException.ToString());
+                this.logger.LogError(e.InnerException?.ToString());
                 return this.BadRequest(e.Message);
             }
         }
