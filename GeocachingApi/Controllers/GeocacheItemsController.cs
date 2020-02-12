@@ -80,5 +80,35 @@ namespace GeocachingApi.Controllers
                 return this.BadRequest(e.Message);
             }
         }
+
+        [HttpPut, Produces(typeof(GeocacheItemModel))]
+        public async Task<ActionResult<GeocacheItemModel>> UpdateGeocacheItem([FromBody]GeocacheItemModel geocacheItem)
+        {
+            if (geocacheItem == null)
+            {
+                this.ModelState.AddModelError(nameof(geocacheItem), "Invalid Geocache Item.");
+                return this.BadRequest(this.ModelState);
+            }
+
+            var validationMessage = await this.geocacheItemsService.ValidateGeocacheItem(geocacheItem);
+
+            if (validationMessage.Any())
+            {
+                this.ModelState.AddModelError(nameof(geocacheItem), JsonSerializer.Serialize(validationMessage));
+                return this.BadRequest(this.ModelState);
+            }
+
+            try
+            {
+                geocacheItem = (GeocacheItemModel)await this.geocacheItemsService.UpdateGeocacheItem(geocacheItem);
+
+                return this.Ok(geocacheItem);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError(e.InnerException?.ToString());
+                return this.BadRequest(e.Message);
+            }
+        }
     }
 }

@@ -41,6 +41,11 @@ namespace GeocachingApi.Domain.Services
             return geocacheItem;
         }
 
+        public async Task<IGeocacheItemModel> UpdateGeocacheItem(IGeocacheItemModel geocacheItem)
+        {
+            return new GeocacheItemModel();
+        }
+
         public async Task<IList<string>> ValidateGeocacheItem(IGeocacheItemModel geocacheItem)
         {
             var validationMessages = new List<string>();
