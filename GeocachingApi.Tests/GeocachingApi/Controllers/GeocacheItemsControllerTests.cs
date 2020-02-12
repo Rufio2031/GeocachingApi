@@ -18,8 +18,8 @@ namespace GeocachingApi.Tests.GeocachingApi.Controllers
         private Mock<IGeocacheItemsService> geocacheItemsService;
         private Mock<ILogger<GeocacheItemsController>> logger;
 
-        private IList<GeocacheItem> geocacheItemList;
-        private GeocacheItem geocacheItem;
+        private IList<GeocacheItemModel> geocacheItemList;
+        private GeocacheItemModel geocacheItem;
 
         [TestInitialize]
         public void TestInitialize()
@@ -48,7 +48,7 @@ namespace GeocachingApi.Tests.GeocachingApi.Controllers
         [TestMethod]
         public async Task GetActiveGeocacheItemsByGeocacheId_Should_Call_GeocacheItemService_GetActiveGeocacheItemsByGeocacheId()
         {
-            this.geocacheItemsService.Setup(x => x.GetGeocacheItemsByGeocacheId(1, false)).ReturnsAsync(new List<GeocacheItem>()).Verifiable();
+            this.geocacheItemsService.Setup(x => x.GetGeocacheItemsByGeocacheId(1, false)).ReturnsAsync(new List<GeocacheItemModel>()).Verifiable();
             await this.geocacheItemsController.GetGeocacheItemsByGeocacheId(1);
             this.geocacheItemsService.Verify();
         }
@@ -56,7 +56,7 @@ namespace GeocachingApi.Tests.GeocachingApi.Controllers
         [TestMethod]
         public async Task GetActiveGeocacheItemsByGeocacheId_Should_Return_NotFound_When_No_Results_Found()
         {
-            this.geocacheItemsService.Setup(x => x.GetGeocacheItemsByGeocacheId(1, false)).ReturnsAsync(new List<GeocacheItem>());
+            this.geocacheItemsService.Setup(x => x.GetGeocacheItemsByGeocacheId(1, false)).ReturnsAsync(new List<GeocacheItemModel>());
             var result = await this.geocacheItemsController.GetGeocacheItemsByGeocacheId(1);
             Assert.AreEqual(typeof(NotFoundObjectResult), result.GetType());
         }
@@ -79,8 +79,8 @@ namespace GeocachingApi.Tests.GeocachingApi.Controllers
 
         private void SetupGeocacheItemList()
         {
-            this.geocacheItemList = new List<GeocacheItem>();
-            this.geocacheItem = new GeocacheItem();
+            this.geocacheItemList = new List<GeocacheItemModel>();
+            this.geocacheItem = new GeocacheItemModel();
 
             this.geocacheItemList.Add(this.geocacheItem);
         }

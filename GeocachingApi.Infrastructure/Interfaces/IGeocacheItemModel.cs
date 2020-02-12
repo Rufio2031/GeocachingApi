@@ -2,7 +2,7 @@
 
 namespace GeocachingApi.Infrastructure.Interfaces
 {
-    public interface IGeocacheItem
+    public interface IGeocacheItemModel
     {
         int Id { get; set; }
         string Name { get; set; }

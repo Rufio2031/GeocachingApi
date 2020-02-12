@@ -4,22 +4,22 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using GeocachingApi.Domain.DataAccess;
-using GeocachingApi.Infrastructure.Models;
+using GeocachingApi.Domain.DataAccess.Geocaching;
 using GeocachingApi.Infrastructure.Extensions;
 using GeocachingApi.Infrastructure.Interfaces;
+using GeocachingApi.Infrastructure.Models;
 
 namespace GeocachingApi.Domain.Queries
 {
     class GeocacheItemsQueries
     {
-        public static async Task<IEnumerable<GeocacheItem>> GetGeocacheItemsByGeocacheId(ApplicationDbContext db, int id)
+        public static async Task<IEnumerable<GeocacheItemModel>> GetGeocacheItemsByGeocacheId(geocachingContext db, int id)
         {
             return await Task.Run(() => {
                                       return (from c in db.Geocache
                                               join ci in db.GeocacheItem on c.Id equals ci.GeocacheId
                                               where (c.Id == id)
-                                              select new GeocacheItem
+                                              select new GeocacheItemModel
                                                      {
                                                          Id = ci.Id,
                                                          Name = ci.Name,
@@ -30,17 +30,26 @@ namespace GeocachingApi.Domain.Queries
                                   });
         }
 
-        public static async Task<GeocacheItem> CreateGeocacheItem(ApplicationDbContext db, IGeocacheItem geocacheItem)
+        public static async Task<GeocacheItem> CreateGeocacheItem(geocachingContext db, IGeocacheItemModel geocacheItem)
         {
-            await Task.Run(() => {
-                db.GeocacheItem.Add((GeocacheItem)geocacheItem);
-                db.SaveChanges();
-            });
+            var createdItem = await Task.Run(() =>
+                                             {
+                                                 var newGeocacheItem = new GeocacheItem
+                                                                       {
+                                                                           Name = geocacheItem.Name,
+                                                                           GeocacheId = geocacheItem.GeocacheId,
+                                                                           ActiveStartDate = geocacheItem.ActiveStartDate,
+                                                                           ActiveEndDate = geocacheItem.ActiveEndDate
+                                                                       };
+                                                 db.GeocacheItem.Add(newGeocacheItem);
+                                                 db.SaveChanges();
+                                                 return newGeocacheItem;
+                                             });
 
-            return (GeocacheItem)geocacheItem;
+            return createdItem;
         }
 
-        public static bool HasUniqueName(ApplicationDbContext db, string name)
+        public static bool HasUniqueName(geocachingContext db, string name)
         {
             var result = (from ci in db.GeocacheItem
                          where ci.Name == name

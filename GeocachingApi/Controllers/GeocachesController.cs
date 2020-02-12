@@ -23,7 +23,7 @@ namespace GeocachingApi.Controllers
 
         // GET: /Geocache
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Geocache>>> Get()
+        public async Task<ActionResult<IEnumerable<GeocacheModel>>> Get()
         {
             try
             {
@@ -39,8 +39,8 @@ namespace GeocachingApi.Controllers
         }
 
         // GET: /Geocache/2
-        [HttpGet("{id}"), Produces(typeof(Geocache))]
-        public async Task<ActionResult<Geocache>> Get(int id)
+        [HttpGet("{id}"), Produces(typeof(GeocacheModel))]
+        public async Task<ActionResult<GeocacheModel>> Get(int id)
         {
             if (id == 0)
             {

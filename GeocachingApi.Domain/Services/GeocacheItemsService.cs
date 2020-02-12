@@ -19,14 +19,14 @@ namespace GeocachingApi.Domain.Services
             this.logger = logger;
         }
 
-        public async Task<IList<GeocacheItem>> GetGeocacheItemsByGeocacheId(int id, bool activeOnly)
+        public async Task<IList<GeocacheItemModel>> GetGeocacheItemsByGeocacheId(int id, bool activeOnly)
         {
             var geocacheItems = await this.dataService.GetGeocacheItemsByGeocacheId(id, activeOnly);
 
             return geocacheItems.ToSafeList();
         }
 
-        public async Task<IGeocacheItem> CreateGeocacheItem(IGeocacheItem geocacheItem)
+        public async Task<IGeocacheItemModel> CreateGeocacheItem(IGeocacheItemModel geocacheItem)
         {
             try
             {
@@ -41,7 +41,7 @@ namespace GeocachingApi.Domain.Services
             return geocacheItem;
         }
 
-        public IList<string> ValidateGeocacheItem(IGeocacheItem geocacheItem)
+        public IList<string> ValidateGeocacheItem(IGeocacheItemModel geocacheItem)
         {
             var validationMessages = new List<string>();
 

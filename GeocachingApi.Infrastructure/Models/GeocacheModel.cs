@@ -2,7 +2,7 @@
 
 namespace GeocachingApi.Infrastructure.Models
 {
-    public class Geocache : IGeocache
+    public class GeocacheModel : IGeocacheModel
     {
         public int Id { get; set; }
         public string Name { get; set; }

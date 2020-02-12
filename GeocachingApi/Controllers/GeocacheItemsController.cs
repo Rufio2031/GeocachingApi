@@ -23,8 +23,8 @@ namespace GeocachingApi.Controllers
             this.geocacheItemsService = geocacheItemsService;
         }
 
-        [HttpGet("~/geocaches/{id}/geocache-items"), Produces(typeof(GeocacheItem))]
-        public async Task<ActionResult<GeocacheItem>> GetGeocacheItemsByGeocacheId(int id, bool activeOnly = true)
+        [HttpGet("~/geocaches/{id}/geocache-items"), Produces(typeof(GeocacheItemModel))]
+        public async Task<ActionResult<GeocacheItemModel>> GetGeocacheItemsByGeocacheId(int id, bool activeOnly = true)
         {
             if (id == 0)
             {
@@ -51,8 +51,8 @@ namespace GeocachingApi.Controllers
             }
         }
 
-        [HttpPost, Produces(typeof(GeocacheItem))]
-        public async Task<ActionResult<GeocacheItem>> AddGeocacheItem([FromBody]GeocacheItem geocacheItem)
+        [HttpPost, Produces(typeof(GeocacheItemModel))]
+        public async Task<ActionResult<GeocacheItemModel>> AddGeocacheItem([FromBody]GeocacheItemModel geocacheItem)
         {
             if (geocacheItem == null)
             {
@@ -70,7 +70,7 @@ namespace GeocachingApi.Controllers
 
             try
             {
-                geocacheItem = (GeocacheItem)await this.geocacheItemsService.CreateGeocacheItem(geocacheItem);
+                geocacheItem = (GeocacheItemModel)await this.geocacheItemsService.CreateGeocacheItem(geocacheItem);
 
                 return this.Ok(geocacheItem);
             }

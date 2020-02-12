@@ -6,7 +6,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using GeocachingApi.Infrastructure.Interfaces;
 using GeocachingApi.Infrastructure.Models;
-using GeocachingApi.Domain.DataAccess;
+using GeocachingApi.Domain.DataAccess.Geocaching;
+using GeocachingApi.Domain.Factories;
 using GeocachingApi.Domain.Queries;
 using GeocachingApi.Infrastructure.Extensions;
 
@@ -14,28 +15,28 @@ namespace GeocachingApi.Domain.Services
 {
     public class DataService : IDataService
     {
-        private readonly ApplicationDbContext dbContext;
+        private readonly geocachingContext dbContext;
 
-        public DataService(ApplicationDbContext context)
+        public DataService(geocachingContext context)
         {
             this.dbContext = context;
         }
 
-        public async Task<IEnumerable<Geocache>> GetActiveGeocaches()
+        public async Task<IEnumerable<GeocacheModel>> GetActiveGeocaches()
         {
             var geocaches = await GeocachesQueries.GetActiveGeocaches(this.dbContext);
 
-            return geocaches ?? new List<Geocache>();
+            return geocaches ?? new List<GeocacheModel>();
         }
 
-        public async Task<Geocache> GetGeocacheById(int id)
+        public async Task<GeocacheModel> GetGeocacheById(int id)
         {
             var geocache = await GeocachesQueries.GetGeocacheById(this.dbContext, id);
 
-            return geocache ?? new Geocache();
+            return geocache ?? new GeocacheModel();
         }
 
-        public async Task<IEnumerable<GeocacheItem>> GetGeocacheItemsByGeocacheId(int id, bool activeOnly)
+        public async Task<IEnumerable<GeocacheItemModel>> GetGeocacheItemsByGeocacheId(int id, bool activeOnly)
         {
             var geocacheItems = await GeocacheItemsQueries.GetGeocacheItemsByGeocacheId(this.dbContext, id);
 
@@ -47,11 +48,12 @@ namespace GeocachingApi.Domain.Services
             return geocacheItems.ToSafeList();
         }
 
-        public async Task<GeocacheItem> CreateGeocacheItem(IGeocacheItem geocacheItem)
+        public async Task<GeocacheItemModel> CreateGeocacheItem(IGeocacheItemModel geocacheItem)
         {
-            geocacheItem = await GeocacheItemsQueries.CreateGeocacheItem(this.dbContext, geocacheItem);
+            var newGeocacheItem = await GeocacheItemsQueries.CreateGeocacheItem(this.dbContext, geocacheItem);
+            geocacheItem = GeocacheItemModelFactory.ConvertFromGeocacheItem(newGeocacheItem);
 
-            return (GeocacheItem)geocacheItem;
+            return (GeocacheItemModel)geocacheItem;
         }
 
         public bool HasUniqueName(string name)

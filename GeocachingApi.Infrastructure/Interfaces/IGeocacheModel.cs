@@ -4,7 +4,7 @@ using GeocachingApi.Infrastructure.Models;
 
 namespace GeocachingApi.Infrastructure.Interfaces
 {
-    public interface IGeocache
+    public interface IGeocacheModel
     {
         int Id { get; set; }
         string Name { get; set; }

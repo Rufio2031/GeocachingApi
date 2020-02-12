@@ -3,19 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using GeocachingApi.Domain.DataAccess;
-using GeocachingApi.Infrastructure.Models;
+using GeocachingApi.Domain.DataAccess.Geocaching;
+using GeocachingApi.Infrastructure.Interfaces;
+using GeocachingApi.Infrastructure;
 using GeocachingApi.Infrastructure.Extensions;
+using GeocachingApi.Infrastructure.Models;
 
 namespace GeocachingApi.Domain.Queries
 {
     class GeocachesQueries
     {
-        public static async Task<IEnumerable<Geocache>> GetActiveGeocaches(ApplicationDbContext db)
+        public static async Task<IEnumerable<GeocacheModel>> GetActiveGeocaches(geocachingContext db)
         {
             return await Task.Run(() => {
                 return (from c in db.Geocache
-                        select new Geocache
+                        select new GeocacheModel
                         {
                             Id = c.Id,
                             Name = c.Name
@@ -23,33 +25,16 @@ namespace GeocachingApi.Domain.Queries
             });
         }
 
-        public static async Task<Geocache> GetGeocacheById(ApplicationDbContext db, int id)
+        public static async Task<GeocacheModel> GetGeocacheById(geocachingContext db, int id)
         {
             return await Task.Run(() => {
                 return (from c in db.Geocache
                         where c.Id == id
-                        select new Geocache
+                        select new GeocacheModel
                         {
                             Id = c.Id,
                             Name = c.Name
                         }).FirstOrDefault();
-            });
-        }
-
-        public static async Task<IEnumerable<GeocacheItem>> GetGeocacheItemsByGeocacheId(ApplicationDbContext db, int id)
-        {
-            return await Task.Run(() => {
-                return (from c in db.Geocache
-                        join ci in db.GeocacheItem on c.Id equals ci.GeocacheId
-                        where (c.Id == id)
-                        select new GeocacheItem
-                        {
-                            Id = ci.Id,
-                            Name = ci.Name,
-                            GeocacheId = ci.GeocacheId,
-                            ActiveStartDate = ci.ActiveStartDate,
-                            ActiveEndDate = ci.ActiveEndDate
-                        }).ToListAsync();
             });
         }
     }
