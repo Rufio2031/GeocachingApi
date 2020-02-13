@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using GeocachingApi.Domain.DataAccess.Geocaching;
-using GeocachingApi.Infrastructure.Extensions;
 using GeocachingApi.Infrastructure.Interfaces;
 using GeocachingApi.Infrastructure.Models;
 
