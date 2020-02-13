@@ -21,6 +21,7 @@ namespace GeocachingApi.Tests.GeocachingApi.Domain.Services
 
         private IList<GeocacheItemModel> geocacheItemList;
         private GeocacheItemModel geocacheItem;
+        private IGeocacheItemPatchGeocacheIdModel patchGeocacheIdModel;
 
         [TestInitialize]
         public void TestInitialize()
@@ -98,27 +99,31 @@ namespace GeocachingApi.Tests.GeocachingApi.Domain.Services
         }
 
         [TestMethod]
-        public async Task UpdateGeocacheItemGeocacheId_Should_Throw_ArgumentException_When_Id_Is_Zero()
+        public async Task PatchGeocacheItemGeocacheId_Should_Throw_ArgumentException_When_Id_Is_Zero()
         {
-            await Assert.ThrowsExceptionAsync<ArgumentException>(() => this.dataService.UpdateGeocacheItemGeocacheId(0, 1));
+            this.patchGeocacheIdModel.Id = 0;
+            await Assert.ThrowsExceptionAsync<ArgumentException>(() => this.dataService.PatchGeocacheItemGeocacheId(this.patchGeocacheIdModel));
         }
 
         [TestMethod]
-        public async Task UpdateGeocacheItemGeocacheId_Should_Throw_ArgumentException_When_Id_Is_Negative()
+        public async Task PatchGeocacheItemGeocacheId_Should_Throw_ArgumentException_When_Id_Is_Negative()
         {
-            await Assert.ThrowsExceptionAsync<ArgumentException>(() => this.dataService.UpdateGeocacheItemGeocacheId(-1, 1));
+            this.patchGeocacheIdModel.Id = -1;
+            await Assert.ThrowsExceptionAsync<ArgumentException>(() => this.dataService.PatchGeocacheItemGeocacheId(this.patchGeocacheIdModel));
         }
 
         [TestMethod]
-        public async Task UpdateGeocacheItemGeocacheId_Should_Throw_ArgumentException_When_GeocacheId_Is_Zero()
+        public async Task PatchGeocacheItemGeocacheId_Should_Throw_ArgumentException_When_GeocacheId_Is_Zero()
         {
-            await Assert.ThrowsExceptionAsync<ArgumentException>(() => this.dataService.UpdateGeocacheItemGeocacheId(1, 0));
+            this.patchGeocacheIdModel.GeocacheId = 0;
+            await Assert.ThrowsExceptionAsync<ArgumentException>(() => this.dataService.PatchGeocacheItemGeocacheId(this.patchGeocacheIdModel));
         }
 
         [TestMethod]
-        public async Task UpdateGeocacheItemGeocacheId_Should_Throw_ArgumentException_When_GeocacheId_Is_Negative()
+        public async Task PatchGeocacheItemGeocacheId_Should_Throw_ArgumentException_When_GeocacheId_Is_Negative()
         {
-            await Assert.ThrowsExceptionAsync<ArgumentException>(() => this.dataService.UpdateGeocacheItemGeocacheId(1, -1));
+            this.patchGeocacheIdModel.GeocacheId = -1;
+            await Assert.ThrowsExceptionAsync<ArgumentException>(() => this.dataService.PatchGeocacheItemGeocacheId(this.patchGeocacheIdModel));
         }
 
         private void SetupGeocacheItems()
@@ -134,6 +139,12 @@ namespace GeocachingApi.Tests.GeocachingApi.Domain.Services
             };
 
             this.geocacheItemList.Add(this.geocacheItem);
+
+            this.patchGeocacheIdModel = new GeocacheItemPatchGeocacheIdModel
+                                        {
+                                            Id = 3,
+                                            GeocacheId = 6
+                                        };
         }
     }
 }

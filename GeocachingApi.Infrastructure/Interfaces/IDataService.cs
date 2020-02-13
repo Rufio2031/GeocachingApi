@@ -56,11 +56,10 @@ namespace GeocachingApi.Infrastructure.Interfaces
         Task<GeocacheItemModel> CreateGeocacheItem(IGeocacheItemModel geocacheItem);
 
         /// <summary>
-        /// Update the geocache item of the given id with the given geocache item data.
+        /// Updates the GeocacheId of the given Geocache item id.
         /// </summary>
-        /// <param name="id">The id of the geocache item.</param>
-        /// <param name="geocacheId">The geocache item data to update with.</param>
+        /// <param name="patchModel">The patch model to update the GeocacheId.</param>
         /// <returns>GeocacheItemModel of the updated geocache item.</returns>
-        Task<GeocacheItemModel> UpdateGeocacheItemGeocacheId(int id, int? geocacheId);
+        Task<GeocacheItemModel> PatchGeocacheItemGeocacheId(IGeocacheItemPatchGeocacheIdModel patchModel);
     }
 }

@@ -140,24 +140,23 @@ namespace GeocachingApi.Domain.Services
         }
 
         /// <summary>
-        /// Update the geocache item of the given id with the given geocache item data.
+        /// Updates the GeocacheId of the given Geocache item id.
         /// </summary>
-        /// <param name="id">The id of the geocache item.</param>
-        /// <param name="geocacheId">The geocache item data to update with.</param>
+        /// <param name="patchModel">The patch model to update the GeocacheId.</param>
         /// <returns>GeocacheItemModel of the updated geocache item.</returns>
-        public async Task<GeocacheItemModel> UpdateGeocacheItemGeocacheId(int id, int? geocacheId)
+        public async Task<GeocacheItemModel> PatchGeocacheItemGeocacheId(IGeocacheItemPatchGeocacheIdModel patchModel)
         {
-            if (id <= 0)
+            if (patchModel.Id <= 0)
             {
-                throw new ArgumentException("Invalid id in DataService.UpdateGeocacheItemGeocacheId()");
+                throw new ArgumentException("Invalid id in DataService.PatchGeocacheItemGeocacheId()");
             }
 
-            if (geocacheId <= 0)
+            if (patchModel.GeocacheId <= 0)
             {
-                throw new ArgumentException("Invalid geocacheId in DataService.UpdateGeocacheItemGeocacheId()");
+                throw new ArgumentException("Invalid geocacheId in DataService.PatchGeocacheItemGeocacheId()");
             }
 
-            var newGeocacheItem = await GeocacheItemsQueries.UpdateGeocacheItemGeocacheId(this.dbContext, id, geocacheId);
+            var newGeocacheItem = await GeocacheItemsQueries.UpdateGeocacheItemGeocacheId(this.dbContext, patchModel);
             var geocacheItemModel = GeocacheItemModelFactory.ConvertFromGeocacheItem(newGeocacheItem);
 
             return (GeocacheItemModel)geocacheItemModel;

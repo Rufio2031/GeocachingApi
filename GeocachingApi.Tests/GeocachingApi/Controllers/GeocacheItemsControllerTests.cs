@@ -20,6 +20,7 @@ namespace GeocachingApi.Tests.GeocachingApi.Controllers
 
         private IList<GeocacheItemModel> geocacheItemList;
         private GeocacheItemModel geocacheItem;
+        private GeocacheItemPatchGeocacheIdModel patchGeocacheIdModel;
 
         [TestInitialize]
         public void TestInitialize()
@@ -94,7 +95,8 @@ namespace GeocachingApi.Tests.GeocachingApi.Controllers
         [TestMethod]
         public async Task GetGeocacheItemsByGeocacheId_Should_Call_GeocacheItemService_GetGeocacheItemsByGeocacheId()
         {
-            this.geocacheItemsService.Setup(x => x.GetGeocacheItemsByGeocacheId(1, true)).ReturnsAsync(new List<GeocacheItemModel>()).Verifiable();
+            this.geocacheItemsService.Setup(x => x.GetGeocacheItemsByGeocacheId(1, true)).ReturnsAsync(new List<GeocacheItemModel>())
+                .Verifiable();
             await this.geocacheItemsController.GetGeocacheItemsByGeocacheId(1);
             this.geocacheItemsService.Verify();
         }
@@ -116,7 +118,8 @@ namespace GeocachingApi.Tests.GeocachingApi.Controllers
         }
 
         [TestMethod]
-        public async Task GetGeocacheItemsByGeocacheId_Should_Return_BadRequestObjectResult_When_GeocacheItemService_Throws_An_Exception()
+        public async Task
+            GetGeocacheItemsByGeocacheId_Should_Return_BadRequestObjectResult_When_GeocacheItemService_Throws_An_Exception()
         {
             this.geocacheItemsService.Setup(x => x.GetGeocacheItemsByGeocacheId(1, true)).ThrowsAsync(new Exception());
             var result = await this.geocacheItemsController.GetGeocacheItemsByGeocacheId(1);
@@ -126,7 +129,8 @@ namespace GeocachingApi.Tests.GeocachingApi.Controllers
         [TestMethod]
         public async Task CreateGeocacheItem_Should_Call_GeocacheItemsService_ValidateGeocacheItem()
         {
-            this.geocacheItemsService.Setup(x => x.ValidateGeocacheItem(this.geocacheItem)).ReturnsAsync(new List<string>()).Verifiable();
+            this.geocacheItemsService.Setup(x => x.ValidateGeocacheItem(this.geocacheItem)).ReturnsAsync(new List<string>())
+                .Verifiable();
             await this.geocacheItemsController.CreateGeocacheItem(this.geocacheItem);
             this.geocacheItemsService.Verify();
         }
@@ -134,7 +138,7 @@ namespace GeocachingApi.Tests.GeocachingApi.Controllers
         [TestMethod]
         public async Task CreateGeocacheItem_Should_Return_BadRequestObjectResult_When_ValidationMessages_Is_Not_Empty()
         {
-            var testValidationMessages = new List<string> { "I am an error." };
+            var testValidationMessages = new List<string> {"I am an error."};
             this.geocacheItemsService.Setup(x => x.ValidateGeocacheItem(this.geocacheItem)).ReturnsAsync(testValidationMessages);
             var result = await this.geocacheItemsController.CreateGeocacheItem(this.geocacheItem);
             Assert.AreEqual(typeof(BadRequestObjectResult), result.GetType());
@@ -176,94 +180,85 @@ namespace GeocachingApi.Tests.GeocachingApi.Controllers
         }
 
         [TestMethod]
-        public async Task UpdateGeocacheId_Should_Call_GeocacheItemsService_ValidateGeocacheItem()
+        public async Task PatchGeocacheId_Should_Call_GeocacheItemsService_ValidateForPatchGeocacheId()
         {
-            this.geocacheItemsService.Setup(x => x.ValidateGeocacheItem(this.geocacheItem)).ReturnsAsync(new List<string>()).Verifiable();
-            var result = await this.geocacheItemsController.UpdateGeocacheId(1, this.geocacheItem);
+            this.geocacheItemsService.Setup(x => x.ValidateGeocacheItem(this.geocacheItem)).ReturnsAsync(new List<string>());
+            this.geocacheItemsService.Setup(x => x.ValidateForPatchGeocacheId(this.patchGeocacheIdModel))
+                .ReturnsAsync(new List<string>()).Verifiable();
+            var result = await this.geocacheItemsController.PatchGeocacheId(this.patchGeocacheIdModel);
             this.geocacheItemsService.Verify();
         }
 
         [TestMethod]
-        public async Task UpdateGeocacheId_Should_Return_BadRequestObjectResult_When_ValidationMessages_Is_Not_Null()
-        {
-            var testValidationMessages = new List<string> { "I am an error." };
-            this.geocacheItemsService.Setup(x => x.ValidateGeocacheItem(this.geocacheItem)).ReturnsAsync(testValidationMessages);
-            var result = await this.geocacheItemsController.UpdateGeocacheId(1, this.geocacheItem);
-            Assert.AreEqual(typeof(BadRequestObjectResult), result.GetType());
-        }
-
-        [TestMethod]
-        public async Task UpdateGeocacheId_Should_Return_BadRequestObjectResult_When_GeocacheItemsService_ValidateGeocacheItem_Throws()
-        {
-            this.geocacheItemsService.Setup(x => x.ValidateGeocacheItem(this.geocacheItem)).ThrowsAsync(new Exception());
-            var result = await this.geocacheItemsController.UpdateGeocacheId(1, this.geocacheItem);
-            Assert.AreEqual(typeof(BadRequestObjectResult), result.GetType());
-        }
-
-        [TestMethod]
-        public async Task UpdateGeocacheId_Should_Call_GeocacheItemsService_ValidateForUpdateGeocacheId()
+        public async Task
+            PatchGeocacheId_Should_Return_BadRequestObjectResult_When_GeocacheItemsService_ValidateForPatchGeocacheId_Throws()
         {
             this.geocacheItemsService.Setup(x => x.ValidateGeocacheItem(this.geocacheItem)).ReturnsAsync(new List<string>());
-            this.geocacheItemsService.Setup(x => x.ValidateForUpdateGeocacheId(1, this.geocacheItem.GeocacheId)).ReturnsAsync(new List<string>()).Verifiable();
-            var result = await this.geocacheItemsController.UpdateGeocacheId(1, this.geocacheItem);
+            this.geocacheItemsService.Setup(x => x.ValidateForPatchGeocacheId(this.patchGeocacheIdModel))
+                .ThrowsAsync(new Exception());
+            var result = await this.geocacheItemsController.PatchGeocacheId(this.patchGeocacheIdModel);
+            Assert.AreEqual(typeof(BadRequestObjectResult), result.GetType());
+        }
+
+        [TestMethod]
+        public async Task PatchGeocacheId_Should_Return_BadRequestObjectResult_When_ValidationForUpdateMessages_Is_Not_Null()
+        {
+            var testValidationMessages = new List<string> {"I am an error."};
+            this.geocacheItemsService.Setup(x => x.ValidateGeocacheItem(this.geocacheItem)).ReturnsAsync(new List<string>());
+            this.geocacheItemsService.Setup(x => x.ValidateForPatchGeocacheId(this.patchGeocacheIdModel))
+                .ReturnsAsync(testValidationMessages);
+            var result = await this.geocacheItemsController.PatchGeocacheId(this.patchGeocacheIdModel);
+            Assert.AreEqual(typeof(BadRequestObjectResult), result.GetType());
+        }
+
+        [TestMethod]
+        public async Task PatchGeocacheId_Should_Call_GeocacheItemsService_UpdateGeocacheItemGeocacheId()
+        {
+            this.geocacheItemsService.Setup(x => x.ValidateGeocacheItem(this.geocacheItem)).ReturnsAsync(new List<string>());
+            this.geocacheItemsService.Setup(x => x.ValidateForPatchGeocacheId(this.patchGeocacheIdModel))
+                .ReturnsAsync(new List<string>());
+            this.geocacheItemsService.Setup(x => x.PatchGeocacheItemGeocacheId(this.patchGeocacheIdModel))
+                .ReturnsAsync(this.geocacheItem).Verifiable();
+            var result = await this.geocacheItemsController.PatchGeocacheId(this.patchGeocacheIdModel);
             this.geocacheItemsService.Verify();
         }
 
         [TestMethod]
-        public async Task UpdateGeocacheId_Should_Return_BadRequestObjectResult_When_GeocacheItemsService_ValidateForUpdateGeocacheId_Throws()
+        public async Task PatchGeocacheId_Should_Return_OkObjectResult_When_GeocacheItemsService_PatchGeocacheId_Succeeds()
         {
             this.geocacheItemsService.Setup(x => x.ValidateGeocacheItem(this.geocacheItem)).ReturnsAsync(new List<string>());
-            this.geocacheItemsService.Setup(x => x.ValidateForUpdateGeocacheId(1, this.geocacheItem.GeocacheId)).ThrowsAsync(new Exception());
-            var result = await this.geocacheItemsController.UpdateGeocacheId(1, this.geocacheItem);
-            Assert.AreEqual(typeof(BadRequestObjectResult), result.GetType());
-        }
-
-        [TestMethod]
-        public async Task UpdateGeocacheId_Should_Return_BadRequestObjectResult_When_ValidationForUpdateMessages_Is_Not_Null()
-        {
-            var testValidationMessages = new List<string> { "I am an error." };
-            this.geocacheItemsService.Setup(x => x.ValidateGeocacheItem(this.geocacheItem)).ReturnsAsync(new List<string>());
-            this.geocacheItemsService.Setup(x => x.ValidateForUpdateGeocacheId(1, this.geocacheItem.GeocacheId)).ReturnsAsync(testValidationMessages);
-            var result = await this.geocacheItemsController.UpdateGeocacheId(1, this.geocacheItem);
-            Assert.AreEqual(typeof(BadRequestObjectResult), result.GetType());
-        }
-
-        [TestMethod]
-        public async Task UpdateGeocacheId_Should_Call_GeocacheItemsService_UpdateGeocacheItemGeocacheId()
-        {
-            this.geocacheItemsService.Setup(x => x.ValidateGeocacheItem(this.geocacheItem)).ReturnsAsync(new List<string>());
-            this.geocacheItemsService.Setup(x => x.ValidateForUpdateGeocacheId(1, this.geocacheItem.GeocacheId)).ReturnsAsync(new List<string>());
-            this.geocacheItemsService.Setup(x => x.UpdateGeocacheItemGeocacheId(1, this.geocacheItem.GeocacheId)).ReturnsAsync(this.geocacheItem).Verifiable();
-            var result = await this.geocacheItemsController.UpdateGeocacheId(1, this.geocacheItem);
-            this.geocacheItemsService.Verify();
-        }
-
-        [TestMethod]
-        public async Task UpdateGeocacheId_Should_Return_OkObjectResult_When_GeocacheItemsService_UpdateGeocacheId_Succeeds()
-        {
-            this.geocacheItemsService.Setup(x => x.ValidateGeocacheItem(this.geocacheItem)).ReturnsAsync(new List<string>());
-            this.geocacheItemsService.Setup(x => x.ValidateForUpdateGeocacheId(1, this.geocacheItem.GeocacheId)).ReturnsAsync(new List<string>());
-            this.geocacheItemsService.Setup(x => x.UpdateGeocacheItemGeocacheId(1, this.geocacheItem.GeocacheId)).ReturnsAsync(this.geocacheItem);
-            var result = await this.geocacheItemsController.UpdateGeocacheId(1, this.geocacheItem);
+            this.geocacheItemsService.Setup(x => x.ValidateForPatchGeocacheId(this.patchGeocacheIdModel))
+                .ReturnsAsync(new List<string>());
+            this.geocacheItemsService.Setup(x => x.PatchGeocacheItemGeocacheId(this.patchGeocacheIdModel))
+                .ReturnsAsync(this.geocacheItem);
+            var result = await this.geocacheItemsController.PatchGeocacheId(this.patchGeocacheIdModel);
             Assert.AreEqual(typeof(OkObjectResult), result.GetType());
         }
 
         [TestMethod]
-        public async Task UpdateGeocacheId_Should_Return_BadRequestObjectResult_When_GeocacheItemsService_UpdateGeocacheId_Throws()
+        public async Task PatchGeocacheId_Should_Return_BadRequestObjectResult_When_GeocacheItemsService_PatchGeocacheId_Throws()
         {
             this.geocacheItemsService.Setup(x => x.ValidateGeocacheItem(this.geocacheItem)).ReturnsAsync(new List<string>());
-            this.geocacheItemsService.Setup(x => x.ValidateForUpdateGeocacheId(1, this.geocacheItem.GeocacheId)).ReturnsAsync(new List<string>());
-            this.geocacheItemsService.Setup(x => x.UpdateGeocacheItemGeocacheId(1, this.geocacheItem.GeocacheId)).ThrowsAsync(new Exception());
-            var result = await this.geocacheItemsController.UpdateGeocacheId(1, this.geocacheItem);
+            this.geocacheItemsService.Setup(x => x.ValidateForPatchGeocacheId(this.patchGeocacheIdModel))
+                .ReturnsAsync(new List<string>());
+            this.geocacheItemsService.Setup(x => x.PatchGeocacheItemGeocacheId(this.patchGeocacheIdModel))
+                .ThrowsAsync(new Exception());
+            var result = await this.geocacheItemsController.PatchGeocacheId(this.patchGeocacheIdModel);
             Assert.AreEqual(typeof(BadRequestObjectResult), result.GetType());
         }
 
         private void SetupGeocacheItemList()
         {
             this.geocacheItemList = new List<GeocacheItemModel>();
-            this.geocacheItem = new GeocacheItemModel { Id = 4 };
+            this.geocacheItem = new GeocacheItemModel {Id = 4};
 
             this.geocacheItemList.Add(this.geocacheItem);
+
+            this.patchGeocacheIdModel = new GeocacheItemPatchGeocacheIdModel
+                                        {
+                                            Id = 3,
+                                            GeocacheId = 6
+                                        };
         }
     }
 }

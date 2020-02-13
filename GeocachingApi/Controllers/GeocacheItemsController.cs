@@ -62,7 +62,7 @@ namespace GeocachingApi.Controllers
         /// <param name="geocacheId">The geocache id.</param>
         /// <param name="activeOnly"><c>true</c> to only include active geocache items; otherwise, <c>false</c> include all results.</param>
         /// <returns>ObjectResult with list of GeocacheItemModel of the given geocacheId.</returns>
-        [HttpGet("~/geocaches/{id}/geocache-items"), Produces(typeof(List<GeocacheItemModel>))]
+        [HttpGet("~/geocaches/{geocacheId}/geocache-items"), Produces(typeof(List<GeocacheItemModel>))]
         public async Task<ActionResult> GetGeocacheItemsByGeocacheId(int geocacheId, bool activeOnly = true)
         {
             if (geocacheId <= 0)
@@ -120,36 +120,34 @@ namespace GeocachingApi.Controllers
         }
 
         /// <summary>
-        /// Updates the geocache item of the given id with the given geocache item data.
+        /// Updates the GeocacheId of the given Geocache item id.
         /// </summary>
-        /// <param name="id">The id of the geocache item to update.</param>
-        /// <param name="geocacheItem">The geocache item details to update with.</param>
+        /// <param name="patchModel">The patch model to update the GeocacheId.</param>
         /// <returns>ObjectResult with GeocacheItemModel of the updated geocache item.</returns>
-        [HttpPut("{id}"), Produces(typeof(GeocacheItemModel))]
-        public async Task<ActionResult> UpdateGeocacheId(int id, [FromBody]GeocacheItemModel geocacheItem)
+        [HttpPatch, Produces(typeof(GeocacheItemModel))]
+        public async Task<ActionResult> PatchGeocacheId([FromBody]GeocacheItemPatchGeocacheIdModel patchModel)
         {
-            if (geocacheItem.Id != id)
+            if (patchModel.Id <= 0)
             {
-                geocacheItem.Id = id;
+                this.ModelState.AddModelError(nameof(patchModel.Id), "Invalid Id provided.");
+                return this.BadRequest(this.ModelState);
+            }
+            if (patchModel.GeocacheId <= 0)
+            {
+                this.ModelState.AddModelError(nameof(patchModel.GeocacheId), "Invalid GeocacheId provided.");
+                return this.BadRequest(this.ModelState);
             }
 
             try
             {
-                var validationMessage = await this.geocacheItemsService.ValidateGeocacheItem(geocacheItem);
-                if (validationMessage.Any())
-                {
-                    this.ModelState.AddModelError(nameof(geocacheItem), JsonSerializer.Serialize(validationMessage));
-                    return this.BadRequest(this.ModelState);
-                }
-
-                var validationForUpdateMessages = await this.geocacheItemsService.ValidateForUpdateGeocacheId(id, geocacheItem.GeocacheId);
+                var validationForUpdateMessages = await this.geocacheItemsService.ValidateForPatchGeocacheId(patchModel);
                 if (validationForUpdateMessages.Any())
                 {
-                    this.ModelState.AddModelError(nameof(geocacheItem), JsonSerializer.Serialize(validationForUpdateMessages));
+                    this.ModelState.AddModelError(nameof(patchModel), JsonSerializer.Serialize(validationForUpdateMessages));
                     return this.BadRequest(this.ModelState);
                 }
 
-                geocacheItem = (GeocacheItemModel)await this.geocacheItemsService.UpdateGeocacheItemGeocacheId(id, geocacheItem.GeocacheId);
+                var geocacheItem = (GeocacheItemModel)await this.geocacheItemsService.PatchGeocacheItemGeocacheId(patchModel);
 
                 return this.Ok(geocacheItem);
             }

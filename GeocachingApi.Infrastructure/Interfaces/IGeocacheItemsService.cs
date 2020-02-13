@@ -29,12 +29,11 @@ namespace GeocachingApi.Infrastructure.Interfaces
         Task<IGeocacheItemModel> CreateGeocacheItem(IGeocacheItemModel geocacheItem);
 
         /// <summary>
-        /// Updates the geocache item of the given id with the given geocache item data.
+        /// Updates the GeocacheId of the given Geocache item id.
         /// </summary>
-        /// <param name="id">The id of the geocache item to update.</param>
-        /// <param name="geocacheId">The geocache data to update with.</param>
+        /// <param name="patchModel">The patch model to update the GeocacheId.</param>
         /// <returns>GeocacheItemModel of the updated geocache item.</returns>
-        Task<IGeocacheItemModel> UpdateGeocacheItemGeocacheId(int id, int? geocacheId);
+        Task<IGeocacheItemModel> PatchGeocacheItemGeocacheId(IGeocacheItemPatchGeocacheIdModel patchModel);
 
         /// <summary>
         /// Validates the geocache item is valid.
@@ -46,9 +45,8 @@ namespace GeocachingApi.Infrastructure.Interfaces
         /// <summary>
         /// Validates the geocache item is valid for updating the geocache id.
         /// </summary>
-        /// <param name="id">The id of the geocache item to be validated.</param>
-        /// <param name="geocacheId">The geocache id of the geocache item to be validated.</param>
+        /// <param name="patchModel">The patch model to update the GeocacheId.</param>
         /// <returns>List of strings with the collected error messages; if any.</returns>
-        Task<IList<string>> ValidateForUpdateGeocacheId(int id, int? geocacheId);
+        Task<IList<string>> ValidateForPatchGeocacheId(IGeocacheItemPatchGeocacheIdModel patchModel);
     }
 }

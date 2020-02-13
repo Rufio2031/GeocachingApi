@@ -72,19 +72,18 @@ namespace GeocachingApi.Domain.Services
         }
 
         /// <summary>
-        /// Updates the geocache item of the given id with the given geocache item data.
+        /// Updates the GeocacheId of the given Geocache item id.
         /// </summary>
-        /// <param name="id">The id of the geocache item to update.</param>
-        /// <param name="geocacheId">The geocache data to update with.</param>
+        /// <param name="patchModel">The patch model to update the GeocacheId.</param>
         /// <returns>GeocacheItemModel of the updated geocache item.</returns>
-        public async Task<IGeocacheItemModel> UpdateGeocacheItemGeocacheId(int id, int? geocacheId)
+        public async Task<IGeocacheItemModel> PatchGeocacheItemGeocacheId(IGeocacheItemPatchGeocacheIdModel patchModel)
         {
-            if ((id <= 0) || (geocacheId <= 0))
+            if ((patchModel.Id <= 0) || (patchModel.GeocacheId <= 0))
             {
                 throw new ArgumentException("Id's cannot be less than or equal to 0.");
             }
 
-            var geocacheItem = await this.dataService.UpdateGeocacheItemGeocacheId(id, geocacheId);
+            var geocacheItem = await this.dataService.PatchGeocacheItemGeocacheId(patchModel);
 
             return geocacheItem ?? new GeocacheItemModel();
         }
@@ -134,17 +133,19 @@ namespace GeocachingApi.Domain.Services
         /// <summary>
         /// Validates the geocache item is valid for updating the geocache id.
         /// </summary>
-        /// <param name="id">The id of the geocache item to be validated.</param>
-        /// <param name="geocacheId">The geocache id of the geocache item to be validated.</param>
+        /// <param name="patchModel">The patch model to update the GeocacheId.</param>
         /// <returns>List of strings with the collected error messages; if any.</returns>
-        public async Task<IList<string>> ValidateForUpdateGeocacheId(int id, int? geocacheId)
+        public async Task<IList<string>> ValidateForPatchGeocacheId(IGeocacheItemPatchGeocacheIdModel patchModel)
         {
             var validationMessages = new List<string>();
+            var id = patchModel.Id;
+            var geocacheId = patchModel.GeocacheId;
 
             var geocacheItem = await this.GetGeocacheItem(id);
             if (!(geocacheItem.Id > 0))
             {
                 validationMessages.Add("Geocache Item does not exist.");
+                return validationMessages;
             }
 
             if (!geocacheItem.IsActive)

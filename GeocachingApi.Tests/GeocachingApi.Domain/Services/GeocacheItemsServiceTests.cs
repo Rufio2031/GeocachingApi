@@ -21,6 +21,7 @@ namespace GeocachingApi.Tests.GeocachingApi.Domain.Services
 
         private IList<GeocacheItemModel> geocacheItemList;
         private GeocacheItemModel geocacheItem;
+        private IGeocacheItemPatchGeocacheIdModel patchGeocacheIdModel;
 
         [TestInitialize]
         public void TestInitialize()
@@ -135,50 +136,54 @@ namespace GeocachingApi.Tests.GeocachingApi.Domain.Services
         }
 
         [TestMethod]
-        public async Task UpdateGeocacheItemGeocacheId_Should_Throw_ArgumentException_When_Id_Is_0()
+        public async Task PatchGeocacheItemGeocacheId_Should_Throw_ArgumentException_When_Id_Is_0()
         {
-            await Assert.ThrowsExceptionAsync<ArgumentException>(() => this.geocacheItemsService.UpdateGeocacheItemGeocacheId(0, 1));
+            this.patchGeocacheIdModel.Id = 0;
+            await Assert.ThrowsExceptionAsync<ArgumentException>(() => this.geocacheItemsService.PatchGeocacheItemGeocacheId(this.patchGeocacheIdModel));
         }
 
         [TestMethod]
-        public async Task UpdateGeocacheItemGeocacheId_Should_Throw_ArgumentException_When_Id_Is_Negative()
+        public async Task PatchGeocacheItemGeocacheId_Should_Throw_ArgumentException_When_Id_Is_Negative()
         {
-            await Assert.ThrowsExceptionAsync<ArgumentException>(() => this.geocacheItemsService.UpdateGeocacheItemGeocacheId(-1, 1));
+            this.patchGeocacheIdModel.Id = -1;
+            await Assert.ThrowsExceptionAsync<ArgumentException>(() => this.geocacheItemsService.PatchGeocacheItemGeocacheId(this.patchGeocacheIdModel));
         }
 
         [TestMethod]
-        public async Task UpdateGeocacheItemGeocacheId_Should_Throw_ArgumentException_When_GeocacheId_Is_0()
+        public async Task PatchGeocacheItemGeocacheId_Should_Throw_ArgumentException_When_GeocacheId_Is_0()
         {
-            await Assert.ThrowsExceptionAsync<ArgumentException>(() => this.geocacheItemsService.UpdateGeocacheItemGeocacheId(1, 0));
+            this.patchGeocacheIdModel.GeocacheId = 0;
+            await Assert.ThrowsExceptionAsync<ArgumentException>(() => this.geocacheItemsService.PatchGeocacheItemGeocacheId(this.patchGeocacheIdModel));
         }
 
         [TestMethod]
-        public async Task UpdateGeocacheItemGeocacheId_Should_Throw_ArgumentException_When_GeocacheId_Is_Negative()
+        public async Task PatchGeocacheItemGeocacheId_Should_Throw_ArgumentException_When_GeocacheId_Is_Negative()
         {
-            await Assert.ThrowsExceptionAsync<ArgumentException>(() => this.geocacheItemsService.UpdateGeocacheItemGeocacheId(1, -1));
+            this.patchGeocacheIdModel.GeocacheId = -1;
+            await Assert.ThrowsExceptionAsync<ArgumentException>(() => this.geocacheItemsService.PatchGeocacheItemGeocacheId(this.patchGeocacheIdModel));
         }
 
         [TestMethod]
-        public async Task UpdateGeocacheItemGeocacheId_Should_Call_DataService_UpdateGeocacheItemGeocacheId()
+        public async Task PatchGeocacheItemGeocacheId_Should_Call_DataService_PatchGeocacheItemGeocacheId()
         {
-            this.dataService.Setup(x => x.UpdateGeocacheItemGeocacheId(1, 1)).ReturnsAsync(this.geocacheItem).Verifiable();
-            await this.geocacheItemsService.UpdateGeocacheItemGeocacheId(1, 1);
+            this.dataService.Setup(x => x.PatchGeocacheItemGeocacheId(this.patchGeocacheIdModel)).ReturnsAsync(this.geocacheItem).Verifiable();
+            await this.geocacheItemsService.PatchGeocacheItemGeocacheId(this.patchGeocacheIdModel);
             this.dataService.Verify();
         }
 
         [TestMethod]
-        public async Task UpdateGeocacheItemGeocacheId_Should_Return_GeocacheItemModel_When_DataService_UpdateGeocacheItemGeocacheId_Returns_GeocacheItemModel()
+        public async Task PatchGeocacheItemGeocacheId_Should_Return_GeocacheItemModel_When_DataService_PatchGeocacheItemGeocacheId_Returns_GeocacheItemModel()
         {
-            this.dataService.Setup(x => x.UpdateGeocacheItemGeocacheId(1, 1)).ReturnsAsync(this.geocacheItem);
-            var result = await this.geocacheItemsService.UpdateGeocacheItemGeocacheId(1, 1);
+            this.dataService.Setup(x => x.PatchGeocacheItemGeocacheId(this.patchGeocacheIdModel)).ReturnsAsync(this.geocacheItem);
+            var result = await this.geocacheItemsService.PatchGeocacheItemGeocacheId(this.patchGeocacheIdModel);
             Assert.AreEqual(this.geocacheItem, result);
         }
 
         [TestMethod]
-        public async Task UpdateGeocacheItemGeocacheId_Should_Return_GeocacheItemModel_When_DataService_UpdateGeocacheItemGeocacheId_Returns_Null()
+        public async Task PatchGeocacheItemGeocacheId_Should_Return_GeocacheItemModel_When_DataService_PatchGeocacheItemGeocacheId_Returns_Null()
         {
-            this.dataService.Setup(x => x.UpdateGeocacheItemGeocacheId(1, 1)).ReturnsAsync(() => null);
-            var result = await this.geocacheItemsService.UpdateGeocacheItemGeocacheId(1, 1);
+            this.dataService.Setup(x => x.PatchGeocacheItemGeocacheId(this.patchGeocacheIdModel)).ReturnsAsync(() => null);
+            var result = await this.geocacheItemsService.PatchGeocacheItemGeocacheId(this.patchGeocacheIdModel);
             Assert.AreEqual(typeof(GeocacheItemModel), result.GetType());
         }
 
@@ -265,7 +270,7 @@ namespace GeocachingApi.Tests.GeocachingApi.Domain.Services
         }
 
         [TestMethod]
-        public async Task UpdateGeocacheItemGeocacheId_Should_Call_DataService_GeocacheIdExists_When_GeocacheId_Is_Greater_Than_0()
+        public async Task PatchGeocacheItemGeocacheId_Should_Call_DataService_GeocacheIdExists_When_GeocacheId_Is_Greater_Than_0()
         {
             this.dataService.Setup(x => x.GetGeocacheItem(this.geocacheItem.Name)).ReturnsAsync(this.geocacheItem);
             this.dataService.Setup(x => x.GeocacheIdExists(this.geocacheItem.GeocacheId ?? 0)).ReturnsAsync(false).Verifiable();
@@ -274,7 +279,7 @@ namespace GeocachingApi.Tests.GeocachingApi.Domain.Services
         }
 
         [TestMethod]
-        public async Task UpdateGeocacheItemGeocacheId_Should_Not_Call_DataService_GeocacheIdExists_When_GeocacheId_Is_0()
+        public async Task PatchGeocacheItemGeocacheId_Should_Not_Call_DataService_GeocacheIdExists_When_GeocacheId_Is_0()
         {
             this.geocacheItem.GeocacheId = 0;
             this.dataService.Setup(x => x.GetGeocacheItem(this.geocacheItem.Name)).ReturnsAsync(this.geocacheItem);
@@ -283,7 +288,7 @@ namespace GeocachingApi.Tests.GeocachingApi.Domain.Services
         }
 
         [TestMethod]
-        public async Task UpdateGeocacheItemGeocacheId_Should_Not_Call_DataService_GeocacheIdExists_When_GeocacheId_Is_Negative()
+        public async Task PatchGeocacheItemGeocacheId_Should_Not_Call_DataService_GeocacheIdExists_When_GeocacheId_Is_Negative()
         {
             this.geocacheItem.GeocacheId = -1;
             this.dataService.Setup(x => x.GetGeocacheItem(this.geocacheItem.Name)).ReturnsAsync(this.geocacheItem);
@@ -292,7 +297,7 @@ namespace GeocachingApi.Tests.GeocachingApi.Domain.Services
         }
 
         [TestMethod]
-        public async Task UpdateGeocacheItemGeocacheId_Should_Return_List_String_When_Validation_Passes()
+        public async Task PatchGeocacheItemGeocacheId_Should_Return_List_String_When_Validation_Passes()
         {
             this.dataService.Setup(x => x.GetGeocacheItem(this.geocacheItem.Name)).ReturnsAsync(this.geocacheItem);
             this.dataService.Setup(x => x.GeocacheIdExists(this.geocacheItem.GeocacheId ?? 0)).ReturnsAsync(true);
@@ -301,16 +306,16 @@ namespace GeocachingApi.Tests.GeocachingApi.Domain.Services
         }
 
         [TestMethod]
-        public async Task ValidateForUpdateGeocacheId_Should_Return_List_String_When_Validation_Passes()
+        public async Task ValidateForPatchGeocacheId_Should_Return_List_String_When_Validation_Passes()
         {
-            this.geocacheItem.GeocacheId = null;
-            this.dataService.Setup(x => x.GetGeocacheItem(1)).ReturnsAsync(this.geocacheItem);
-            var result = await this.geocacheItemsService.ValidateForUpdateGeocacheId(1, 1);
+            this.patchGeocacheIdModel.GeocacheId = null;
+            this.dataService.Setup(x => x.GetGeocacheItem(this.patchGeocacheIdModel.Id)).ReturnsAsync(this.geocacheItem);
+            var result = await this.geocacheItemsService.ValidateForPatchGeocacheId(this.patchGeocacheIdModel);
             Assert.AreEqual(typeof(List<string>), result.GetType());
         }
 
         [TestMethod]
-        public async Task ValidateForUpdateGeocacheId_Should_Return_ValidationMessage_When_GeocacheItem_Does_Not_Exist()
+        public async Task ValidateForPatchGeocacheId_Should_Return_ValidationMessage_When_GeocacheItem_Does_Not_Exist()
         {
             var testItem = new GeocacheItemModel
             {
@@ -320,73 +325,96 @@ namespace GeocachingApi.Tests.GeocachingApi.Domain.Services
                 ActiveStartDate = DateTime.MinValue,
                 ActiveEndDate = DateTime.MaxValue
             };
-            this.dataService.Setup(x => x.GetGeocacheItem(1)).ReturnsAsync(testItem);
-            var result = await this.geocacheItemsService.ValidateForUpdateGeocacheId(1, 1);
+            this.dataService.Setup(x => x.GetGeocacheItem(this.patchGeocacheIdModel.Id)).ReturnsAsync(testItem);
+            var result = await this.geocacheItemsService.ValidateForPatchGeocacheId(this.patchGeocacheIdModel);
             Assert.IsTrue(result.Contains("Geocache Item does not exist."));
         }
 
         [TestMethod]
-        public async Task ValidateForUpdateGeocacheId_Should_Return_ValidationMessage_When_GeocacheItem_Is_Inactive()
+        public async Task ValidateForPatchGeocacheId_Should_Not_Return_ValidationMessage_Item_Is_Inactive_When_GeocacheItem_Does_Not_Exist()
+        {
+            var testItem = new GeocacheItemModel
+                           {
+                               Id = 0,
+                               Name = "Name",
+                               GeocacheId = null,
+                               ActiveStartDate = DateTime.MinValue,
+                               ActiveEndDate = DateTime.MaxValue
+                           };
+            this.geocacheItem.ActiveStartDate = DateTime.MinValue;
+            this.geocacheItem.ActiveEndDate = DateTime.MinValue;
+            this.dataService.Setup(x => x.GetGeocacheItem(this.patchGeocacheIdModel.Id)).ReturnsAsync(testItem);
+            var result = await this.geocacheItemsService.ValidateForPatchGeocacheId(this.patchGeocacheIdModel);
+            Assert.IsFalse(result.Contains("Geocache Item is inactive."));
+        }
+
+        [TestMethod]
+        public async Task ValidateForPatchGeocacheId_Should_Return_ValidationMessage_When_GeocacheItem_Is_Inactive()
         {
             this.geocacheItem.ActiveStartDate = DateTime.MinValue;
             this.geocacheItem.ActiveEndDate = DateTime.MinValue;
-            this.dataService.Setup(x => x.GetGeocacheItem(1)).ReturnsAsync(this.geocacheItem);
-            var result = await this.geocacheItemsService.ValidateForUpdateGeocacheId(1, 1);
+            this.dataService.Setup(x => x.GetGeocacheItem(this.patchGeocacheIdModel.Id)).ReturnsAsync(this.geocacheItem);
+            var result = await this.geocacheItemsService.ValidateForPatchGeocacheId(this.patchGeocacheIdModel);
             Assert.IsTrue(result.Contains("Geocache Item is inactive."));
         }
 
         [TestMethod]
-        public async Task ValidateForUpdateGeocacheId_Should_Return_ValidationMessage_When_GeocacheId_Is_0()
+        public async Task ValidateForPatchGeocacheId_Should_Return_ValidationMessage_When_GeocacheId_Is_0()
         {
-            this.dataService.Setup(x => x.GetGeocacheItem(1)).ReturnsAsync(this.geocacheItem);
-            var result = await this.geocacheItemsService.ValidateForUpdateGeocacheId(1, 0);
+            this.patchGeocacheIdModel.GeocacheId = 0;
+            this.dataService.Setup(x => x.GetGeocacheItem(this.patchGeocacheIdModel.Id)).ReturnsAsync(this.geocacheItem);
+            var result = await this.geocacheItemsService.ValidateForPatchGeocacheId(this.patchGeocacheIdModel);
             Assert.IsTrue(result.Contains("Invalid GeocacheId."));
         }
 
         [TestMethod]
-        public async Task ValidateForUpdateGeocacheId_Should_Return_ValidationMessage_When_GeocacheId_Is_Negative()
+        public async Task ValidateForPatchGeocacheId_Should_Return_ValidationMessage_When_GeocacheId_Is_Negative()
         {
-            this.dataService.Setup(x => x.GetGeocacheItem(1)).ReturnsAsync(this.geocacheItem);
-            var result = await this.geocacheItemsService.ValidateForUpdateGeocacheId(1, 0);
+            this.patchGeocacheIdModel.GeocacheId = -1;
+            this.dataService.Setup(x => x.GetGeocacheItem(this.patchGeocacheIdModel.Id)).ReturnsAsync(this.geocacheItem);
+            var result = await this.geocacheItemsService.ValidateForPatchGeocacheId(this.patchGeocacheIdModel);
             Assert.IsTrue(result.Contains("Invalid GeocacheId."));
         }
 
         [TestMethod]
-        public async Task ValidateForUpdateGeocacheId_Should_Call_DataService_GetGeocacheItemsByGeocacheId_When_GeocacheId_Is_Not_Null()
+        public async Task ValidateForPatchGeocacheId_Should_Call_DataService_GetGeocacheItemsByGeocacheId_When_GeocacheId_Is_Not_Null()
         {
-            this.dataService.Setup(x => x.GetGeocacheItem(1)).ReturnsAsync(this.geocacheItem);
-            this.dataService.Setup(x => x.GetGeocacheItemsByGeocacheId(1, true))
+            this.dataService.Setup(x => x.GetGeocacheItem(this.patchGeocacheIdModel.Id)).ReturnsAsync(this.geocacheItem);
+            this.dataService.Setup(x => x.GetGeocacheItemsByGeocacheId(this.patchGeocacheIdModel.GeocacheId ?? 0, true))
                 .ReturnsAsync(this.geocacheItemList).Verifiable();
-            var result = await this.geocacheItemsService.ValidateForUpdateGeocacheId(1, 1);
+            var result = await this.geocacheItemsService.ValidateForPatchGeocacheId(this.patchGeocacheIdModel);
             this.dataService.Verify();
         }
 
         [TestMethod]
-        public async Task ValidateForUpdateGeocacheId_Should_Note_Call_DataService_GetGeocacheItemsByGeocacheId_When_GeocacheId_Is_Null()
+        public async Task ValidateForPatchGeocacheId_Should_Note_Call_DataService_GetGeocacheItemsByGeocacheId_When_GeocacheId_Is_Null()
         {
-            this.dataService.Setup(x => x.GetGeocacheItem(1)).ReturnsAsync(this.geocacheItem);
-            var result = await this.geocacheItemsService.ValidateForUpdateGeocacheId(1, null);
+            this.patchGeocacheIdModel.GeocacheId = null;
+            this.dataService.Setup(x => x.GetGeocacheItem(this.patchGeocacheIdModel.Id)).ReturnsAsync(this.geocacheItem);
+            var result = await this.geocacheItemsService.ValidateForPatchGeocacheId(this.patchGeocacheIdModel);
             this.dataService.Verify(m => m.GetGeocacheItemsByGeocacheId(It.IsAny<int>(), It.IsAny<bool>()), Times.Never());
         }
 
         [TestMethod]
-        public async Task ValidateForUpdateGeocacheId_Should_Note_Call_DataService_GetGeocacheItemsByGeocacheId_When_GeocacheId_Is_0()
+        public async Task ValidateForPatchGeocacheId_Should_Note_Call_DataService_GetGeocacheItemsByGeocacheId_When_GeocacheId_Is_0()
         {
-            this.dataService.Setup(x => x.GetGeocacheItem(1)).ReturnsAsync(this.geocacheItem);
-            var result = await this.geocacheItemsService.ValidateForUpdateGeocacheId(1, 0);
+            this.patchGeocacheIdModel.GeocacheId = 0;
+            this.dataService.Setup(x => x.GetGeocacheItem(this.patchGeocacheIdModel.Id)).ReturnsAsync(this.geocacheItem);
+            var result = await this.geocacheItemsService.ValidateForPatchGeocacheId(this.patchGeocacheIdModel);
             this.dataService.Verify(m => m.GetGeocacheItemsByGeocacheId(It.IsAny<int>(), It.IsAny<bool>()), Times.Never());
         }
 
         [TestMethod]
-        public async Task ValidateForUpdateGeocacheId_Should_Note_Call_DataService_GetGeocacheItemsByGeocacheId_When_GeocacheId_Is_Negative()
+        public async Task ValidateForPatchGeocacheId_Should_Note_Call_DataService_GetGeocacheItemsByGeocacheId_When_GeocacheId_Is_Negative()
         {
-            this.dataService.Setup(x => x.GetGeocacheItem(1)).ReturnsAsync(this.geocacheItem);
-            var result = await this.geocacheItemsService.ValidateForUpdateGeocacheId(1, -1);
+            this.patchGeocacheIdModel.GeocacheId = -1;
+            this.dataService.Setup(x => x.GetGeocacheItem(this.patchGeocacheIdModel.Id)).ReturnsAsync(this.geocacheItem);
+            var result = await this.geocacheItemsService.ValidateForPatchGeocacheId(this.patchGeocacheIdModel);
             this.dataService.Verify(m => m.GetGeocacheItemsByGeocacheId(It.IsAny<int>(), It.IsAny<bool>()), Times.Never());
         }
 
         [TestMethod]
-        public async Task ValidateForUpdateGeocacheId_Should_Return_ValidationMessage_When_Geocache_Already_Has_3_Items()
+        public async Task ValidateForPatchGeocacheId_Should_Return_ValidationMessage_When_Geocache_Already_Has_3_Items()
         {
             var existingGeocacheItems = new List<GeocacheItemModel>
                                         {
@@ -394,15 +422,15 @@ namespace GeocachingApi.Tests.GeocachingApi.Domain.Services
                                             new GeocacheItemModel(),
                                             new GeocacheItemModel()
                                         };
-            this.dataService.Setup(x => x.GetGeocacheItem(1)).ReturnsAsync(this.geocacheItem);
-            this.dataService.Setup(x => x.GetGeocacheItemsByGeocacheId(1, true))
+            this.dataService.Setup(x => x.GetGeocacheItem(this.patchGeocacheIdModel.Id)).ReturnsAsync(this.geocacheItem);
+            this.dataService.Setup(x => x.GetGeocacheItemsByGeocacheId(this.patchGeocacheIdModel.GeocacheId ?? 0, true))
                 .ReturnsAsync(existingGeocacheItems);
-            var result = await this.geocacheItemsService.ValidateForUpdateGeocacheId(1, 1);
+            var result = await this.geocacheItemsService.ValidateForPatchGeocacheId(this.patchGeocacheIdModel);
             Assert.IsTrue(result.Contains("Cannot assign to Geocache with 3 or more active items."));
         }
 
         [TestMethod]
-        public async Task ValidateForUpdateGeocacheId_Should_Return_ValidationMessage_When_Geocache_Already_Has_More_Than_3_Items()
+        public async Task ValidateForPatchGeocacheId_Should_Return_ValidationMessage_When_Geocache_Already_Has_More_Than_3_Items()
         {
             var existingGeocacheItems = new List<GeocacheItemModel>
                                         {
@@ -411,10 +439,10 @@ namespace GeocachingApi.Tests.GeocachingApi.Domain.Services
                                             new GeocacheItemModel(),
                                             new GeocacheItemModel()
                                         };
-            this.dataService.Setup(x => x.GetGeocacheItem(1)).ReturnsAsync(this.geocacheItem);
-            this.dataService.Setup(x => x.GetGeocacheItemsByGeocacheId(1, true))
+            this.dataService.Setup(x => x.GetGeocacheItem(this.patchGeocacheIdModel.Id)).ReturnsAsync(this.geocacheItem);
+            this.dataService.Setup(x => x.GetGeocacheItemsByGeocacheId(this.patchGeocacheIdModel.GeocacheId ?? 0, true))
                 .ReturnsAsync(existingGeocacheItems);
-            var result = await this.geocacheItemsService.ValidateForUpdateGeocacheId(1, 1);
+            var result = await this.geocacheItemsService.ValidateForPatchGeocacheId(this.patchGeocacheIdModel);
             Assert.IsTrue(result.Contains("Cannot assign to Geocache with 3 or more active items."));
         }
 
@@ -431,6 +459,12 @@ namespace GeocachingApi.Tests.GeocachingApi.Domain.Services
             };
 
             this.geocacheItemList.Add(this.geocacheItem);
+
+            this.patchGeocacheIdModel = new GeocacheItemPatchGeocacheIdModel
+                                        {
+                                            Id = 3,
+                                            GeocacheId = 6
+                                        };
         }
     }
 }

@@ -76,16 +76,16 @@ namespace GeocachingApi.Domain.Queries
             return createdItem;
         }
 
-        public static async Task<GeocacheItem> UpdateGeocacheItemGeocacheId(geocachingContext db, int id, int? geocacheId)
+        public static async Task<GeocacheItem> UpdateGeocacheItemGeocacheId(geocachingContext db, IGeocacheItemPatchGeocacheIdModel patchModel)
         {
             var createdItem = await Task.Run(() =>
                                              {
-                                                 var entityGeocacheItem = db.GeocacheItem.FirstOrDefault(i => i.Id == id);
+                                                 var entityGeocacheItem = db.GeocacheItem.FirstOrDefault(i => i.Id == patchModel.Id);
                                                  if (entityGeocacheItem == null)
                                                  {
                                                      throw new KeyNotFoundException();
                                                  }
-                                                 entityGeocacheItem.GeocacheId = geocacheId;
+                                                 entityGeocacheItem.GeocacheId = patchModel.GeocacheId;
                                                  db.SaveChanges();
                                                  return entityGeocacheItem;
                                              });
