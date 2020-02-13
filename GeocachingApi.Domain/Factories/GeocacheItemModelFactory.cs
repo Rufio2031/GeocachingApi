@@ -6,6 +6,11 @@ namespace GeocachingApi.Domain.Factories
 {
     public static class GeocacheItemModelFactory
     {
+        /// <summary>
+        /// Converts a entity GeocacheItem into a GeocacheItemModel
+        /// </summary>
+        /// <param name="geocacheItem">The entity geocache item.</param>
+        /// <returns>GeocacheItemModel of the converted geocache item.</returns>
         public static IGeocacheItemModel ConvertFromGeocacheItem(GeocacheItem geocacheItem)
         {
             var newGeocacheItem = new GeocacheItemModel();
