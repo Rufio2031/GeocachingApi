@@ -25,10 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="GeocachingApi.Infrastructure\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\GeocachingApi.Domain\GeocachingApi.Domain.csproj" />
     <ProjectReference Include="..\GeocachingApi.Infrastructure\GeocachingApi.Infrastructure.csproj" />
     <ProjectReference Include="..\GeocachingApi\GeocachingApi.csproj" />
