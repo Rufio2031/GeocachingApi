@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using GeocachingApi.Infrastructure.Interfaces;
 using GeocachingApi.Infrastructure.Models;
@@ -21,47 +19,81 @@ namespace GeocachingApi.Domain.Services
             this.logger = logger;
         }
 
+        /// <summary>
+        /// Get geocache item by Id.
+        /// </summary>
+        /// <param name="id">The id of the geocache item.</param>
+        /// <returns>GeocacheItemModel of the geocache item.</returns>
         public async Task<GeocacheItemModel> GetGeocacheItem(int id)
         {
+            if (id <= 0)
+            {
+                throw new ArgumentException("id must be greater than 0.");
+            }
+
             var geocacheItem = await this.dataService.GetGeocacheItem(id);
 
             return geocacheItem ?? new GeocacheItemModel();
         }
 
+        /// <summary>
+        /// Get list of geocache items by given geocache id.
+        /// </summary>
+        /// <param name="geocacheId">The geocache id.</param>
+        /// <param name="activeOnly"><c>true</c> to only include active geocache items; otherwise, <c>false</c> include all results.</param>
+        /// <returns>List of GeoCacheItemModel with given geocache id.</returns>
         public async Task<IList<GeocacheItemModel>> GetGeocacheItemsByGeocacheId(int geocacheId, bool activeOnly)
         {
+            if (geocacheId <= 0)
+            {
+                throw new ArgumentException("geocacheId must be greater than 0.");
+            }
+
             var geocacheItems = await this.dataService.GetGeocacheItemsByGeocacheId(geocacheId, activeOnly);
 
             return geocacheItems.ToSafeList();
         }
 
+        /// <summary>
+        /// Create geocache item with give geocache item data.
+        /// </summary>
+        /// <param name="geocacheItem">The geocache item to create.</param>
+        /// <returns>GeocacheItemModel of the created geocache item.</returns>
         public async Task<IGeocacheItemModel> CreateGeocacheItem(IGeocacheItemModel geocacheItem)
         {
-            try
+            if (geocacheItem == null)
             {
-                geocacheItem = await this.dataService.CreateGeocacheItem(geocacheItem);
-            }
-            catch (Exception e)
-            {
-                this.logger.LogError($"Create GeocacheItem failed. Exception: {e}");
-                throw;
+                throw new ArgumentException("geocacheItem cannot be null.");
             }
 
-            return geocacheItem;
+            geocacheItem = await this.dataService.CreateGeocacheItem(geocacheItem);
+
+            return geocacheItem ?? new GeocacheItemModel();
         }
 
+        /// <summary>
+        /// Updates the geocache item of the given id with the given geocache item data.
+        /// </summary>
+        /// <param name="id">The id of the geocache item to update.</param>
+        /// <param name="geocacheId">The geocache data to update with.</param>
+        /// <returns>GeocacheItemModel of the updated geocache item.</returns>
         public async Task<IGeocacheItemModel> UpdateGeocacheItemGeocacheId(int id, int? geocacheId)
         {
-            if (id <= 0)
+            if ((id <= 0) || (geocacheId <= 0))
             {
-                throw new Exception();
+                throw new ArgumentException("Id's cannot be less than or equal to 0.");
             }
 
             var geocacheItem = await this.dataService.UpdateGeocacheItemGeocacheId(id, geocacheId);
 
-            return geocacheItem;
+            return geocacheItem ?? new GeocacheItemModel();
         }
 
+        /// <summary>
+        /// Validates the geocache item is valid.
+        /// </summary>
+        /// <param name="geocacheItem">The geocache item to validate.</param>
+        /// <returns>List of strings with the collected error messages; if any.</returns>
         public async Task<IList<string>> ValidateGeocacheItem(IGeocacheItemModel geocacheItem)
         {
             var validationMessages = new List<string>();
@@ -99,12 +131,18 @@ namespace GeocachingApi.Domain.Services
             return validationMessages;
         }
 
+        /// <summary>
+        /// Validates the geocache item is valid for updating the geocache id.
+        /// </summary>
+        /// <param name="id">The id of the geocache item to be validated.</param>
+        /// <param name="geocacheId">The geocache id of the geocache item to be validated.</param>
+        /// <returns>List of strings with the collected error messages; if any.</returns>
         public async Task<IList<string>> ValidateForUpdateGeocacheId(int id, int? geocacheId)
         {
             var validationMessages = new List<string>();
 
             var geocacheItem = await this.GetGeocacheItem(id);
-            if (geocacheItem.Id <= 0)
+            if (!(geocacheItem.Id > 0))
             {
                 validationMessages.Add("Geocache Item does not exist.");
             }
@@ -114,18 +152,20 @@ namespace GeocachingApi.Domain.Services
                 validationMessages.Add("Geocache Item is inactive.");
             }
 
-            if (geocacheItem.GeocacheId != null)
+            if (geocacheId != null)
             {
                 if (geocacheId <= 0)
                 {
                     validationMessages.Add("Invalid GeocacheId.");
                 }
-
-                var geocacheItemsInGeocache = await GetGeocacheItemsByGeocacheId(geocacheId ?? 0, true);
-                if (geocacheItemsInGeocache.Count >= 3)
+                else
                 {
-                    validationMessages.Add("Cannot assign to Geocache with 3 or more active items.");
-                    return validationMessages;
+                    var geocacheItemsInGeocache = await GetGeocacheItemsByGeocacheId(geocacheId ?? 0, true);
+                    if (geocacheItemsInGeocache.Count >= 3)
+                    {
+                        validationMessages.Add("Cannot assign to Geocache with 3 or more active items.");
+                        return validationMessages;
+                    }
                 }
             }
 

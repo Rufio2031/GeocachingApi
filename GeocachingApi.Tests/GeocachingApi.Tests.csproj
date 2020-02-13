@@ -26,7 +26,6 @@
 
   <ItemGroup>
     <Folder Include="GeocachingApi.Infrastructure\" />
-    <Folder Include="GeocachingApi.Domain\" />
   </ItemGroup>
 
   <ItemGroup>

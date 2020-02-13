@@ -60,7 +60,7 @@ namespace GeocachingApi.Controllers
         /// Get list of geocache items found associated to the given geocacheId.
         /// </summary>
         /// <param name="geocacheId">The geocache id.</param>
-        /// <param name="activeOnly">Optional parameter to include all results, or just active geocache items only.</param>
+        /// <param name="activeOnly"><c>true</c> to only include active geocache items; otherwise, <c>false</c> include all results.</param>
         /// <returns>ObjectResult with list of GeocacheItemModel of the given geocacheId.</returns>
         [HttpGet("~/geocaches/{id}/geocache-items"), Produces(typeof(List<GeocacheItemModel>))]
         public async Task<ActionResult> GetGeocacheItemsByGeocacheId(int geocacheId, bool activeOnly = true)

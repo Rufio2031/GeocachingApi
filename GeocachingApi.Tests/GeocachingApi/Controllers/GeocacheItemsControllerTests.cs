@@ -12,7 +12,7 @@ using GeocachingApi.Infrastructure.Interfaces;
 namespace GeocachingApi.Tests.GeocachingApi.Controllers
 {
     [TestClass]
-    public class GeocacheItemsControllerTests
+    public class GeocacheItemsServiceTests
     {
         private GeocacheItemsController geocacheItemsController;
         private Mock<IGeocacheItemsService> geocacheItemsService;
@@ -56,7 +56,7 @@ namespace GeocachingApi.Tests.GeocachingApi.Controllers
         [TestMethod]
         public async Task GetGeocacheItem_Should_Return_BadRequestObjectResult_If_GeocacheItemService_Throws()
         {
-            this.geocacheItemsService.Setup(x => x.GetGeocacheItem(1)).Throws(new Exception());
+            this.geocacheItemsService.Setup(x => x.GetGeocacheItem(1)).ThrowsAsync(new Exception());
             var result = await this.geocacheItemsController.GetGeocacheItem(1);
             Assert.AreEqual(typeof(BadRequestObjectResult), result.GetType());
         }
@@ -118,7 +118,7 @@ namespace GeocachingApi.Tests.GeocachingApi.Controllers
         [TestMethod]
         public async Task GetGeocacheItemsByGeocacheId_Should_Return_BadRequestObjectResult_When_GeocacheItemService_Throws_An_Exception()
         {
-            this.geocacheItemsService.Setup(x => x.GetGeocacheItemsByGeocacheId(1, true)).Throws(new Exception());
+            this.geocacheItemsService.Setup(x => x.GetGeocacheItemsByGeocacheId(1, true)).ThrowsAsync(new Exception());
             var result = await this.geocacheItemsController.GetGeocacheItemsByGeocacheId(1);
             Assert.AreEqual(typeof(BadRequestObjectResult), result.GetType());
         }
@@ -161,7 +161,7 @@ namespace GeocachingApi.Tests.GeocachingApi.Controllers
         [TestMethod]
         public async Task CreateGeocacheItem_Should_Return_BadRequestObjectResult_When_GeocacheItem_ValidateGeocacheItem_Throws()
         {
-            this.geocacheItemsService.Setup(x => x.ValidateGeocacheItem(this.geocacheItem)).Throws(new Exception());
+            this.geocacheItemsService.Setup(x => x.ValidateGeocacheItem(this.geocacheItem)).ThrowsAsync(new Exception());
             var result = await this.geocacheItemsController.CreateGeocacheItem(this.geocacheItem);
             Assert.AreEqual(typeof(BadRequestObjectResult), result.GetType());
         }
@@ -170,7 +170,7 @@ namespace GeocachingApi.Tests.GeocachingApi.Controllers
         public async Task CreateGeocacheItem_Should_Return_BadRequestObjectResult_When_GeocacheItem_CreateGeocacheItem_Throws()
         {
             this.geocacheItemsService.Setup(x => x.ValidateGeocacheItem(this.geocacheItem)).ReturnsAsync(new List<string>());
-            this.geocacheItemsService.Setup(x => x.CreateGeocacheItem(this.geocacheItem)).Throws(new Exception());
+            this.geocacheItemsService.Setup(x => x.CreateGeocacheItem(this.geocacheItem)).ThrowsAsync(new Exception());
             var result = await this.geocacheItemsController.CreateGeocacheItem(this.geocacheItem);
             Assert.AreEqual(typeof(BadRequestObjectResult), result.GetType());
         }
@@ -195,7 +195,7 @@ namespace GeocachingApi.Tests.GeocachingApi.Controllers
         [TestMethod]
         public async Task UpdateGeocacheId_Should_Return_BadRequestObjectResult_When_GeocacheItemsService_ValidateGeocacheItem_Throws()
         {
-            this.geocacheItemsService.Setup(x => x.ValidateGeocacheItem(this.geocacheItem)).Throws(new Exception());
+            this.geocacheItemsService.Setup(x => x.ValidateGeocacheItem(this.geocacheItem)).ThrowsAsync(new Exception());
             var result = await this.geocacheItemsController.UpdateGeocacheId(1, this.geocacheItem);
             Assert.AreEqual(typeof(BadRequestObjectResult), result.GetType());
         }
@@ -213,7 +213,7 @@ namespace GeocachingApi.Tests.GeocachingApi.Controllers
         public async Task UpdateGeocacheId_Should_Return_BadRequestObjectResult_When_GeocacheItemsService_ValidateForUpdateGeocacheId_Throws()
         {
             this.geocacheItemsService.Setup(x => x.ValidateGeocacheItem(this.geocacheItem)).ReturnsAsync(new List<string>());
-            this.geocacheItemsService.Setup(x => x.ValidateForUpdateGeocacheId(1, this.geocacheItem.GeocacheId)).Throws(new Exception());
+            this.geocacheItemsService.Setup(x => x.ValidateForUpdateGeocacheId(1, this.geocacheItem.GeocacheId)).ThrowsAsync(new Exception());
             var result = await this.geocacheItemsController.UpdateGeocacheId(1, this.geocacheItem);
             Assert.AreEqual(typeof(BadRequestObjectResult), result.GetType());
         }
@@ -253,7 +253,7 @@ namespace GeocachingApi.Tests.GeocachingApi.Controllers
         {
             this.geocacheItemsService.Setup(x => x.ValidateGeocacheItem(this.geocacheItem)).ReturnsAsync(new List<string>());
             this.geocacheItemsService.Setup(x => x.ValidateForUpdateGeocacheId(1, this.geocacheItem.GeocacheId)).ReturnsAsync(new List<string>());
-            this.geocacheItemsService.Setup(x => x.UpdateGeocacheItemGeocacheId(1, this.geocacheItem.GeocacheId)).Throws(new Exception());
+            this.geocacheItemsService.Setup(x => x.UpdateGeocacheItemGeocacheId(1, this.geocacheItem.GeocacheId)).ThrowsAsync(new Exception());
             var result = await this.geocacheItemsController.UpdateGeocacheId(1, this.geocacheItem);
             Assert.AreEqual(typeof(BadRequestObjectResult), result.GetType());
         }
