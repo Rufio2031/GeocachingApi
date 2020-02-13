@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GeocachingApi.Infrastructure.Interfaces;
@@ -37,6 +38,11 @@ namespace GeocachingApi.Domain.Services
         /// <returns>GeocacheModel of the geocache.</returns>
         public async Task<GeocacheModel> GetGeocache(int id)
         {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Invalid id in DataService.GetGeocache()");
+            }
+
             var geocache = await GeocachesQueries.GetGeocache(this.dbContext, id);
 
             return geocache ?? new GeocacheModel();
@@ -49,6 +55,11 @@ namespace GeocachingApi.Domain.Services
         /// <returns><c>true</c> if geocache exists; otherwise, <c>false</c>.</returns>
         public async Task<bool> GeocacheIdExists(int geocacheId)
         {
+            if (geocacheId <= 0)
+            {
+                throw new ArgumentException("Invalid geocacheId in DataService.GeocacheIdExists()");
+            }
+
             var geocache = await this.GetGeocache(geocacheId);
             return geocache.Id > 0;
         }
@@ -61,6 +72,11 @@ namespace GeocachingApi.Domain.Services
         /// <returns>List GeocacheItemModel of geocache items found by geocache id.</returns>
         public async Task<IEnumerable<GeocacheItemModel>> GetGeocacheItemsByGeocacheId(int geocacheId, bool activeOnly)
         {
+            if (geocacheId <= 0)
+            {
+                throw new ArgumentException("Invalid geocacheId in DataService.GetGeocacheItemsByGeocacheId()");
+            }
+
             var geocacheItems = await GeocacheItemsQueries.GetGeocacheItemsByGeocacheId(this.dbContext, geocacheId);
 
             if (activeOnly)
@@ -78,6 +94,11 @@ namespace GeocachingApi.Domain.Services
         /// <returns>GeocacheItemModel of the geocache item.</returns>
         public async Task<GeocacheItemModel> GetGeocacheItem(int id)
         {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Invalid id in DataService.GetGeocacheItem(id)");
+            }
+
             var geocacheItem = await GeocacheItemsQueries.GetGeocacheItem(this.dbContext, id);
 
             return geocacheItem ?? new GeocacheItemModel();
@@ -90,6 +111,11 @@ namespace GeocachingApi.Domain.Services
         /// <returns>GeocacheItemModel of the geocache item.</returns>
         public async Task<GeocacheItemModel> GetGeocacheItem(string name)
         {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("Invalid name in DataService.GetGeocacheItem(name)");
+            }
+
             var geocacheItems = await GeocacheItemsQueries.GetGeocacheItem(this.dbContext, name);
 
             return geocacheItems ?? new GeocacheItemModel();
@@ -102,6 +128,11 @@ namespace GeocachingApi.Domain.Services
         /// <returns>GeocacheItemModel of the created geocache item.</returns>
         public async Task<GeocacheItemModel> CreateGeocacheItem(IGeocacheItemModel geocacheItem)
         {
+            if (geocacheItem == null)
+            {
+                throw new ArgumentException("Invalid geocacheItem in DataService.CreateGeocacheItem()");
+            }
+
             var newGeocacheItem = await GeocacheItemsQueries.CreateGeocacheItem(this.dbContext, geocacheItem);
             geocacheItem = GeocacheItemModelFactory.ConvertFromGeocacheItem(newGeocacheItem);
 
@@ -116,6 +147,16 @@ namespace GeocachingApi.Domain.Services
         /// <returns>GeocacheItemModel of the updated geocache item.</returns>
         public async Task<GeocacheItemModel> UpdateGeocacheItemGeocacheId(int id, int? geocacheId)
         {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Invalid id in DataService.UpdateGeocacheItemGeocacheId()");
+            }
+
+            if (geocacheId <= 0)
+            {
+                throw new ArgumentException("Invalid geocacheId in DataService.UpdateGeocacheItemGeocacheId()");
+            }
+
             var newGeocacheItem = await GeocacheItemsQueries.UpdateGeocacheItemGeocacheId(this.dbContext, id, geocacheId);
             var geocacheItemModel = GeocacheItemModelFactory.ConvertFromGeocacheItem(newGeocacheItem);
 
