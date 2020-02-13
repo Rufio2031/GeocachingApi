@@ -21,24 +21,22 @@ namespace GeocachingApi.Controllers
             this.geocacheService = geocacheService;
         }
 
-        // GET: /Geocache
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GeocacheModel>>> Get()
         {
             try
             {
-                var geocaches = await this.geocacheService.GetActiveGeocaches();
+                var geocaches = await this.geocacheService.GetGeocaches();
 
                 return this.Ok(geocaches);
 
             } catch (Exception e)
             {
-                this.logger.LogError(e.InnerException.ToString());
+                this.logger.LogError(e.InnerException?.ToString());
                 return this.BadRequest(e.Message);
             }
         }
 
-        // GET: /Geocache/2
         [HttpGet("{id}"), Produces(typeof(GeocacheModel))]
         public async Task<ActionResult<GeocacheModel>> Get(int id)
         {
@@ -50,7 +48,7 @@ namespace GeocachingApi.Controllers
 
             try
             {
-                var geocache = await this.geocacheService.GetGeocacheById(id);
+                var geocache = await this.geocacheService.GetGeocache(id);
                 if (geocache?.Id == 0)
                 {
                     return NotFound();
@@ -60,7 +58,7 @@ namespace GeocachingApi.Controllers
 
             } catch (Exception e)
             {
-                this.logger.LogError(e.InnerException.ToString());
+                this.logger.LogError(e.InnerException?.ToString());
                 return this.BadRequest(e.Message);
             }
         }

@@ -1,8 +1,5 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using GeocachingApi.Infrastructure.Interfaces;
 using GeocachingApi.Infrastructure.Models;
@@ -22,23 +19,29 @@ namespace GeocachingApi.Domain.Services
             this.dbContext = context;
         }
 
-        public async Task<IEnumerable<GeocacheModel>> GetActiveGeocaches()
+        public async Task<IEnumerable<GeocacheModel>> GetGeocaches()
         {
-            var geocaches = await GeocachesQueries.GetActiveGeocaches(this.dbContext);
+            var geocaches = await GeocachesQueries.GetGeocaches(this.dbContext);
 
             return geocaches ?? new List<GeocacheModel>();
         }
 
-        public async Task<GeocacheModel> GetGeocacheById(int id)
+        public async Task<GeocacheModel> GetGeocache(int id)
         {
-            var geocache = await GeocachesQueries.GetGeocacheById(this.dbContext, id);
+            var geocache = await GeocachesQueries.GetGeocache(this.dbContext, id);
 
             return geocache ?? new GeocacheModel();
         }
 
-        public async Task<IEnumerable<GeocacheItemModel>> GetGeocacheItemsByGeocacheId(int id, bool activeOnly)
+        public async Task<bool> GeocacheIdExists(int geocacheId)
         {
-            var geocacheItems = await GeocacheItemsQueries.GetGeocacheItemsByGeocacheId(this.dbContext, id);
+            var geocache = await this.GetGeocache(geocacheId);
+            return geocache.Id > 0;
+        }
+
+        public async Task<IEnumerable<GeocacheItemModel>> GetGeocacheItemsByGeocacheId(int geocacheId, bool activeOnly)
+        {
+            var geocacheItems = await GeocacheItemsQueries.GetGeocacheItemsByGeocacheId(this.dbContext, geocacheId);
 
             if (activeOnly)
             {
@@ -46,6 +49,25 @@ namespace GeocachingApi.Domain.Services
             }
 
             return geocacheItems.ToSafeList();
+        }
+
+        /// <summary>
+        /// Get geocache item by Id.
+        /// </summary>
+        /// <param name="id">The id of the Geocache item.</param>
+        /// <returns>GeocacheItemModel of the geocache item.</returns>
+        public async Task<GeocacheItemModel> GetGeocacheItem(int id)
+        {
+            var geocacheItem = await GeocacheItemsQueries.GetGeocacheItem(this.dbContext, id);
+
+            return geocacheItem ?? new GeocacheItemModel();
+        }
+
+        public async Task<GeocacheItemModel> GetGeocacheItem(string name)
+        {
+            var geocacheItems = await GeocacheItemsQueries.GetGeocacheItem(this.dbContext, name);
+
+            return geocacheItems ?? new GeocacheItemModel();
         }
 
         public async Task<GeocacheItemModel> CreateGeocacheItem(IGeocacheItemModel geocacheItem)
@@ -56,15 +78,12 @@ namespace GeocachingApi.Domain.Services
             return (GeocacheItemModel)geocacheItem;
         }
 
-        public async Task<bool> HasUniqueName(string name)
+        public async Task<GeocacheItemModel> UpdateGeocacheItemGeocacheId(int id, int? geocacheId)
         {
-            return await GeocacheItemsQueries.HasUniqueName(this.dbContext, name);
-        }
+            var newGeocacheItem = await GeocacheItemsQueries.UpdateGeocacheItemGeocacheId(this.dbContext, id, geocacheId);
+            var geocacheItemModel = GeocacheItemModelFactory.ConvertFromGeocacheItem(newGeocacheItem);
 
-        public async Task<bool> GeocacheIdExists(int geocacheId)
-        {
-            var geocache = await this.GetGeocacheById(geocacheId);
-            return geocache.Id > 0;
+            return (GeocacheItemModel)geocacheItemModel;
         }
     }
 }

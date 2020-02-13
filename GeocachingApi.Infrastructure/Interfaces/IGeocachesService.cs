@@ -6,7 +6,7 @@ namespace GeocachingApi.Infrastructure.Interfaces
 {
     public interface IGeocachesService
     {
-        Task<IList<GeocacheModel>> GetActiveGeocaches();
-        Task<GeocacheModel> GetGeocacheById(int id);
+        Task<IList<GeocacheModel>> GetGeocaches();
+        Task<GeocacheModel> GetGeocache(int id);
     }
 }

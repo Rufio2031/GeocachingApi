@@ -13,21 +13,47 @@ namespace GeocachingApi.Domain.Queries
 {
     class GeocacheItemsQueries
     {
-        public static async Task<IEnumerable<GeocacheItemModel>> GetGeocacheItemsByGeocacheId(geocachingContext db, int id)
+
+        public static async Task<IEnumerable<GeocacheItemModel>> GetGeocacheItemsByGeocacheId(geocachingContext db, int geocacheId)
         {
-            return await Task.Run(() => {
-                                      return (from c in db.Geocache
-                                              join ci in db.GeocacheItem on c.Id equals ci.GeocacheId
-                                              where (c.Id == id)
-                                              select new GeocacheItemModel
-                                                     {
-                                                         Id = ci.Id,
-                                                         Name = ci.Name,
-                                                         GeocacheId = ci.GeocacheId,
-                                                         ActiveStartDate = ci.ActiveStartDate,
-                                                         ActiveEndDate = ci.ActiveEndDate
-                                                     }).ToListAsync();
-                                  });
+            return await Task.Run(() => (from ci in db.GeocacheItem
+                                         where ci.GeocacheId == geocacheId
+                                         select new GeocacheItemModel
+                                                {
+                                                    Id = ci.Id,
+                                                    Name = ci.Name,
+                                                    GeocacheId = ci.GeocacheId,
+                                                    ActiveStartDate = ci.ActiveStartDate,
+                                                    ActiveEndDate = ci.ActiveEndDate
+                                                }).ToListAsync());
+        }
+
+        public static async Task<GeocacheItemModel> GetGeocacheItem(geocachingContext db, int id)
+        {
+            return await Task.Run(() => (from ci in db.GeocacheItem
+                                         where ci.Id == id
+                                         select new GeocacheItemModel
+                                                {
+                                                    Id = ci.Id,
+                                                    Name = ci.Name,
+                                                    GeocacheId = ci.GeocacheId,
+                                                    ActiveStartDate = ci.ActiveStartDate,
+                                                    ActiveEndDate = ci.ActiveEndDate
+                                                }).FirstOrDefault());
+        }
+
+        public static async Task<GeocacheItemModel> GetGeocacheItem(geocachingContext db, string name)
+        {
+            return await Task.Run(() => (from ci in db.GeocacheItem
+                                         where ci.Name == name
+                                         select new GeocacheItemModel
+                                                {
+                                                    Id = ci.Id,
+                                                    Name = ci.Name,
+                                                    GeocacheId = ci.GeocacheId,
+                                                    ActiveStartDate = ci.ActiveStartDate,
+                                                    ActiveEndDate = ci.ActiveEndDate
+                                                }).FirstOrDefault());
         }
 
         public static async Task<GeocacheItem> CreateGeocacheItem(geocachingContext db, IGeocacheItemModel geocacheItem)
@@ -35,8 +61,8 @@ namespace GeocachingApi.Domain.Queries
             var createdItem = await Task.Run(() =>
                                              {
                                                  var newGeocacheItem = new GeocacheItem
-                                                 {
-                                                     Id = geocacheItem.Id,
+                                                                       {
+                                                                           Id = geocacheItem.Id,
                                                                            Name = geocacheItem.Name,
                                                                            GeocacheId = geocacheItem.GeocacheId,
                                                                            ActiveStartDate = geocacheItem.ActiveStartDate,
@@ -50,16 +76,21 @@ namespace GeocachingApi.Domain.Queries
             return createdItem;
         }
 
-        public static async Task<bool> HasUniqueName(geocachingContext db, string name)
+        public static async Task<GeocacheItem> UpdateGeocacheItemGeocacheId(geocachingContext db, int id, int? geocacheId)
         {
-            var result = await Task.Run(() =>
-            {
-                return (from ci in db.GeocacheItem
-                        where ci.Name == name
-                        select ci).FirstOrDefault();
-            });
+            var createdItem = await Task.Run(() =>
+                                             {
+                                                 var entityGeocacheItem = db.GeocacheItem.FirstOrDefault(i => i.Id == id);
+                                                 if (entityGeocacheItem == null)
+                                                 {
+                                                     throw new KeyNotFoundException();
+                                                 }
+                                                 entityGeocacheItem.GeocacheId = geocacheId;
+                                                 db.SaveChanges();
+                                                 return entityGeocacheItem;
+                                             });
 
-            return result == null;
+            return createdItem;
         }
     }
 }

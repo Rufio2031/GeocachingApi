@@ -15,16 +15,16 @@ namespace GeocachingApi.Domain.Services
             this.dataService = dataService;
         }
 
-        public async Task<IList<GeocacheModel>> GetActiveGeocaches()
+        public async Task<IList<GeocacheModel>> GetGeocaches()
         {
-            var geocaches = await this.dataService.GetActiveGeocaches();
+            var geocaches = await this.dataService.GetGeocaches();
 
             return geocaches.ToSafeList();
         }
 
-        public async Task<GeocacheModel> GetGeocacheById(int id)
+        public async Task<GeocacheModel> GetGeocache(int id)
         {
-            var geocache = await this.dataService.GetGeocacheById(id);
+            var geocache = await this.dataService.GetGeocache(id);
 
             return geocache ?? new GeocacheModel();
         }

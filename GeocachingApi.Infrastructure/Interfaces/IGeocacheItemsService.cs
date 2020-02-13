@@ -6,9 +6,11 @@ namespace GeocachingApi.Infrastructure.Interfaces
 {
     public interface IGeocacheItemsService
     {
-        Task<IList<GeocacheItemModel>> GetGeocacheItemsByGeocacheId(int id, bool activeOnly);
+        Task<GeocacheItemModel> GetGeocacheItem(int id);
+        Task<IList<GeocacheItemModel>> GetGeocacheItemsByGeocacheId(int geocacheId, bool activeOnly);
         Task<IGeocacheItemModel> CreateGeocacheItem(IGeocacheItemModel geocacheItem);
+        Task<IGeocacheItemModel> UpdateGeocacheItemGeocacheId(int id, int? geocacheId);
         Task<IList<string>> ValidateGeocacheItem(IGeocacheItemModel geocacheItem);
-        Task<IGeocacheItemModel> UpdateGeocacheItem(IGeocacheItemModel geocacheItem);
+        Task<IList<string>> ValidateForUpdateGeocacheId(int id, int? geocacheId);
     }
 }

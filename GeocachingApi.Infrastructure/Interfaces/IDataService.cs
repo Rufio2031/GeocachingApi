@@ -6,11 +6,13 @@ namespace GeocachingApi.Infrastructure.Interfaces
 {
     public interface IDataService
     {
-        Task<IEnumerable<GeocacheModel>> GetActiveGeocaches();
-        Task<GeocacheModel> GetGeocacheById(int id);
-        Task<IEnumerable<GeocacheItemModel>> GetGeocacheItemsByGeocacheId(int id, bool activeOnly);
-        Task<GeocacheItemModel> CreateGeocacheItem(IGeocacheItemModel geocacheItem);
-        Task<bool> HasUniqueName(string name);
+        Task<IEnumerable<GeocacheModel>> GetGeocaches();
+        Task<GeocacheModel> GetGeocache(int id);
         Task<bool> GeocacheIdExists(int geocacheId);
+        Task<IEnumerable<GeocacheItemModel>> GetGeocacheItemsByGeocacheId(int geocacheId, bool activeOnly);
+        Task<GeocacheItemModel> GetGeocacheItem(int id);
+        Task<GeocacheItemModel> GetGeocacheItem(string name);
+        Task<GeocacheItemModel> CreateGeocacheItem(IGeocacheItemModel geocacheItem);
+        Task<GeocacheItemModel> UpdateGeocacheItemGeocacheId(int id, int? geocacheId);
     }
 }
